@@ -1,0 +1,19 @@
+@page
+@model AuthModel
+@{
+    ViewData["Title"] = "Authentication";
+}
+
+<h1 class="text-danger">Authentication.</h1>
+<h2 class="text-danger">An wild authentication appeared!</h2>
+<h2 class="text-danger">Authentication used oAuth. It's super effective!</h2>
+
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+
