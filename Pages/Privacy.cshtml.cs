@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Development_Praxisworkshop.Pages
 {
-    
+    [AllowAnonymous]
     public class PrivacyModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
@@ -19,7 +19,7 @@ namespace Development_Praxisworkshop.Pages
             _logger = logger;
         }
         
-        [Authorize]
+       
         public void OnGet()
         {
         }
