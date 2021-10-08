@@ -8,6 +8,13 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+//
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Development_Praxisworkshop
 {
@@ -23,7 +30,18 @@ namespace Development_Praxisworkshop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")); // Fetch Auth Data from AppConfig
+            services.AddControllersWithViews(options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                });
+            services.AddRazorPages()
+                .AddMicrosoftIdentityUI();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,7 +62,8 @@ namespace Development_Praxisworkshop
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication(); // Use Authentication
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

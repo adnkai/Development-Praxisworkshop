@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Development_Praxisworkshop.Pages
 {
+    
     public class PrivacyModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
@@ -16,7 +18,8 @@ namespace Development_Praxisworkshop.Pages
         {
             _logger = logger;
         }
-
+        
+        [Authorize]
         public void OnGet()
         {
         }
