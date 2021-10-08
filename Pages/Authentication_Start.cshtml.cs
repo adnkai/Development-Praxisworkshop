@@ -11,7 +11,7 @@ namespace Development_Praxisworkshop.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
-    public class AuthModel : PageModel
+    public class AuthStartModel : PageModel
     {
         public string RequestId { get; set; }
 
@@ -19,7 +19,7 @@ namespace Development_Praxisworkshop.Pages
 
         private readonly ILogger<ErrorModel> _logger;
 
-        public AuthModel(ILogger<ErrorModel> logger)
+        public AuthStartModel(ILogger<ErrorModel> logger)
         {
             _logger = logger;
         }
@@ -29,9 +29,4 @@ namespace Development_Praxisworkshop.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
         
-        public async Task OnPostAuthenticate(string submitValue="No submit value received!") {
-            
-            Console.WriteLine("Authentication triggered with value: " + submitValue);
-        }
-    }
 }

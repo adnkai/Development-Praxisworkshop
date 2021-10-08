@@ -14,6 +14,8 @@
     <p>
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
+    <form method="post" asp-page-handler="Authenticate">
+        <input type="hidden" name="test" value="You clicked authenticate!"></input>
+        <input type="submit" value="Authenticate"></input>
+    </form>
 }
-
-
