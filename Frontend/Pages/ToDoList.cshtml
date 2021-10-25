@@ -1,0 +1,12 @@
+@page
+@model ToDoModel
+@{
+    ViewData["Title"] = "ToDoList";
+}
+<h1>@ViewData["Title"]</h1>
+
+
+@foreach (string image in @Model.images)
+{
+    <img src=@image></img>
+}
