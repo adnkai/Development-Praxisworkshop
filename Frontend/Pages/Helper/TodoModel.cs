@@ -21,7 +21,6 @@ namespace Development_Praxisworkshop.Helper
     public TodoModel()
     {
       PartitionKey = "TODO";
-      System.Console.WriteLine(RowKey);
       RowKey = new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
       ETag = "*";
     }
