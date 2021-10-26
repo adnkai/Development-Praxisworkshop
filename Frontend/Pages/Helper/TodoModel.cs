@@ -18,13 +18,11 @@ namespace Development_Praxisworkshop.Helper
     [JsonProperty(PropertyName = "IsCompleted")]
     public bool IsCompleted { get; set; }
 
-    public string _RowKey {get;}
-
     public TodoModel()
     {
       PartitionKey = "TODO";
+      System.Console.WriteLine(RowKey);
       RowKey = new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
-      this._RowKey = RowKey;
       ETag = "*";
     }
 
@@ -32,7 +30,6 @@ namespace Development_Praxisworkshop.Helper
     {
       PartitionKey = _partititonKey ?? "TODO";
       RowKey = _rowKey ?? new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
-      this._RowKey = RowKey;
       ETag = "*";
     }
   }

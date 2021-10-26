@@ -5,19 +5,18 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<form method="post" class="mb-3">
+<form  method="post" class="mb-3">
   <div class="mb-3">
     <label for="todotask" class="form-label">Task Description</label>
     <input type="text" class="form-control" id="todotask" aria-describedby="todoHelp" name="todotask">
     <div id="todoHelp" class="form-text">What do you want to do?</div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  <button type="submit" class="btn btn-primary" asp-page-handler="Insert">Submit</button>
+
 
 <table class="table table-striped">
     <thead>
         <tr>
-        <th scope="col">Done</th>
         <th scope="col">Task</th>
         <th scope="col">Action</th>
         </tr>
@@ -26,10 +25,6 @@
     @foreach(var todo in @Model.todos)
     {
         <tr>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="done" @(todo.IsCompleted?"checked='checked'":"")>
-                </div>
             <td>@todo.TaskDescription</td>
             <td>
                 @if(todo.IsCompleted)
@@ -38,18 +33,12 @@
                 }
                 else
                 {
-                    <button type="button" class="btn btn-outline-success" value="@todo._RowKey" onclick="PostMarkDone()">Mark Done</button>
+                        <button type="submit" class="btn btn-outline-success" asp-page-handler="MarkDone">Mark Done</button>
+                        <input type="hidden" name="id" value="@todo.RowKey" />
                 }
             </td>
         </tr>
     }
     </tbody>
 </table>
-
-<script>
-    function PostMarkDone() {
-        $.post("/ToDoList/MarkDone", function (data) {
-            
-        });
-    }
-</script>
+</form>

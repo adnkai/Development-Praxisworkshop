@@ -18,8 +18,8 @@ namespace Development_Praxisworkshop.Pages
     {
         private readonly ILogger<PrivacyModel> _logger;
         private readonly IConfiguration _config;
-        
         public List<TodoModel> todos;
+
         public ToDoListModel(ILogger<PrivacyModel> logger, IConfiguration config)
         {
             _logger = logger;
@@ -31,7 +31,7 @@ namespace Development_Praxisworkshop.Pages
             todos = todo.GetToDos().GetAwaiter().GetResult();
         }
 
-        public void OnPost()
+        public void OnPostInsert()
         {
             var todoTask = Request.Form["todotask"];
 
@@ -44,10 +44,14 @@ namespace Development_Praxisworkshop.Pages
             todos = todo.GetToDos().GetAwaiter().GetResult();
         }
 
-        public void PostMarkDone()
-        {
-            System.Console.WriteLine("yo");
-           
+        public void OnPostMarkDone(string id)
+        {           
+           TableAccountHelper todo = new TableAccountHelper(_config);
+                        
+            todo.MarkDoneToDo(id).GetAwaiter().GetResult();
+            todos = todo.GetToDos().GetAwaiter().GetResult();
+
+            RedirectToPage("/ToDoList");
         }
     }
 }

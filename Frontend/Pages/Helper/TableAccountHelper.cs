@@ -33,6 +33,11 @@ namespace Development_Praxisworkshop.Helper
       return await InsertItem(_todo);
     }
 
+    public async Task<TodoModel> MarkDoneToDo(string _rowKey)
+    {
+      return await UpdateToDo(_rowKey);
+    }
+
     private async Task<List<TodoModel>> EnumerateDocumentsAsync(CloudTable _table)
     {
       List<TodoModel> tmpTodos = new List<TodoModel>();
@@ -69,6 +74,35 @@ namespace Development_Praxisworkshop.Helper
       TodoModel newTodo = (TodoModel)result.Result;
 
       return newTodo;
+    }
+
+    private async Task<TodoModel> UpdateToDo(string _rowKey)
+    {
+      TableResult result;
+      TableOperation operation = TableOperation.Retrieve<TodoModel>("TODO", _rowKey);
+      TodoModel updatedToDo;
+
+      try
+      {
+        result = await _table.ExecuteAsync(operation);
+        
+        if(result.Result == null)
+        {
+          throw new NullReferenceException();
+        }
+
+        TodoModel m = (TodoModel)result.Result;
+        m.IsCompleted = true;
+
+        updatedToDo = await InsertItem(m);
+      }
+      catch (System.Exception e)
+      {
+        System.Console.WriteLine(e.StackTrace);
+        throw;
+      }
+
+      return updatedToDo;
     }
   }
 }
