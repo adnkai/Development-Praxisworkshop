@@ -32,7 +32,7 @@ namespace Project
       }
       catch (Exception)
       {
-        return new BadRequestObjectResult(null);
+        return new BadRequestObjectResult(null); 
       }
 
       return new OkObjectResult((string)data?.RowKey);
