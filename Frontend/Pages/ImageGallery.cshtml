@@ -3,10 +3,22 @@
 @{
     ViewData["Title"] = "Gallery";
 }
+<link rel="stylesheet" href="~/css/gallery.css" />
 <h1>@ViewData["Title"]</h1>
 
 
+<h2>Simple Image Gallery</h2>
+
 @foreach (string image in @Model.images)
 {
-    <img src=@image></img>
+    <div class="responsive">
+        <div class="gallery">
+            <a target="_blank" href=@image>
+            <img src=@image alt="Cinque Terre" width="600" height="400">
+            </a>
+            <div class="desc">Add a description of the image here</div>
+        </div>
+    </div>
 }
+<div class="clearfix"></div>
+<div><p>All images are royalty free.</p><p>Source: <a href="https://www.freeimages.com/">freeimages.com</a></p></div>
