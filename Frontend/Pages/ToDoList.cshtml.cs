@@ -28,7 +28,7 @@ namespace Development_Praxisworkshop.Pages
         public void OnGet()
         {
             TableAccountHelper todo = new TableAccountHelper(_config);
-            todos = todo.GetToDos().GetAwaiter().GetResult();
+            todos = todo.GetToDos();
         }
 
         public void OnPostInsert()
@@ -41,7 +41,7 @@ namespace Development_Praxisworkshop.Pages
             model.TaskDescription = todoTask;
             
             todo.PostToDo(model).GetAwaiter().GetResult();
-            todos = todo.GetToDos().GetAwaiter().GetResult();
+            todos = todo.GetToDos();
         }
 
         public void OnPostMarkDone(string id)
@@ -49,7 +49,7 @@ namespace Development_Praxisworkshop.Pages
            TableAccountHelper todo = new TableAccountHelper(_config);
                         
             todo.MarkDoneToDo(id).GetAwaiter().GetResult();
-            todos = todo.GetToDos().GetAwaiter().GetResult();
+            todos = todo.GetToDos();
 
             RedirectToPage("/ToDoList");
         }

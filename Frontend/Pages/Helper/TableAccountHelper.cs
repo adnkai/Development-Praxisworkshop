@@ -23,9 +23,9 @@ namespace Development_Praxisworkshop.Helper
       _table = table;
     }
 
-    public async Task<List<TodoModel>> GetToDos()
+    public List<TodoModel> GetToDos()
     {
-      return await EnumerateDocumentsAsync(_table);
+      return EnumerateDocumentsAsync(_table);
     }
 
     public async Task<TodoModel> PostToDo(TodoModel _todo)
@@ -38,7 +38,7 @@ namespace Development_Praxisworkshop.Helper
       return await UpdateToDo(_rowKey);
     }
 
-    private async Task<List<TodoModel>> EnumerateDocumentsAsync(CloudTable _table)
+    private List<TodoModel> EnumerateDocumentsAsync(CloudTable _table)
     {
       List<TodoModel> tmpTodos = new List<TodoModel>();
       TableQuery<TodoModel> query = new TableQuery<TodoModel>();
