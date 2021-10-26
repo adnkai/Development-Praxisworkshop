@@ -37,6 +37,10 @@ namespace Development_Praxisworkshop.Helper
     {
       return await UpdateToDo(_rowKey);
     }
+    public async Task<TableResult> DeleteToDo(string _rowKey)
+    {
+      return await DelToDo(_rowKey);
+    }
 
     private List<TodoModel> EnumerateDocumentsAsync(CloudTable _table)
     {
@@ -103,6 +107,21 @@ namespace Development_Praxisworkshop.Helper
       }
 
       return updatedToDo;
+    }
+
+    private async Task<TableResult> DelToDo(string _rowKey)
+    {
+      try
+      {
+        TableOperation operation = TableOperation.Delete(new TodoModel(_rowKey, "TODO"));
+        return await _table.ExecuteAsync(operation);
+        
+      }
+      catch (System.Exception e)
+      {
+        System.Console.WriteLine(e.StackTrace);
+      }
+      return null;
     }
   }
 }

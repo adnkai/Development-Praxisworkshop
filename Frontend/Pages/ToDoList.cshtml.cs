@@ -53,5 +53,15 @@ namespace Development_Praxisworkshop.Pages
 
             RedirectToPage("/ToDoList");
         }
+
+        public void OnPostDeleteToDo(string deleteId)
+        {           
+           TableAccountHelper todo = new TableAccountHelper(_config);
+                        
+            todo.DeleteToDo(deleteId).GetAwaiter().GetResult();
+            todos = todo.GetToDos();
+
+            RedirectToPage("/ToDoList");
+        }
     }
 }
