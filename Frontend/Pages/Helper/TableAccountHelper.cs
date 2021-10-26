@@ -25,7 +25,7 @@ namespace Development_Praxisworkshop.Helper
 
     public async Task<List<TodoModel>> GetToDos()
     {
-        return await EnumerateDocumentsAsync(_table);
+      return await EnumerateDocumentsAsync(_table);
     }
 
     public async Task<TodoModel> PostToDo(TodoModel _todo)
@@ -85,8 +85,8 @@ namespace Development_Praxisworkshop.Helper
       try
       {
         result = await _table.ExecuteAsync(operation);
-        
-        if(result.Result == null)
+
+        if (result.Result == null)
         {
           throw new NullReferenceException();
         }
