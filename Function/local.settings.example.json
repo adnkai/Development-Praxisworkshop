@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "STORAGE_NAME": "",
+        "STAORAGE_KEY": "",
+        "TABLE_PARTITION_KEY": ""
+    }
+}
