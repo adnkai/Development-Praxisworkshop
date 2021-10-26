@@ -1,0 +1,12 @@
+@page
+@model GalleryModel
+@{
+    ViewData["Title"] = "Gallery";
+}
+<h1>@ViewData["Title"]</h1>
+
+
+@foreach (string image in @Model.images)
+{
+    <img src=@image></img>
+}

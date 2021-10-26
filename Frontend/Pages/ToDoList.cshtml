@@ -1,12 +1,9 @@
 @page
-@model ToDoModel
+@model ToDoListModel
 @{
-    ViewData["Title"] = "ToDoList";
+    ViewData["Title"] = "ToDo List";
 }
 <h1>@ViewData["Title"]</h1>
 
 
-@foreach (string image in @Model.images)
-{
-    <img src=@image></img>
-}
+<div><p>Some To Do stuff</p></div>
