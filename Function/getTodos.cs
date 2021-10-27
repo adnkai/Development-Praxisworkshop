@@ -34,5 +34,29 @@ namespace Project
 
       return new OkObjectResult(result);
     }
+  
+    [FunctionName("getTodo")]
+    public static async Task<IActionResult> Run2(
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getTodo/{id}")] HttpRequest req,
+        ILogger log, string id)
+    {
+      log.LogInformation(id);
+     
+      var partitionKey = System.Environment.GetEnvironmentVariable("TABLE_PARTITION_KEY", EnvironmentVariableTarget.Process);
+      string name = req.Query["name"];
+      
+      Todo result;
+      
+      try
+      {
+        result = await (new TableSettings(partitionKey)).GetItem(partitionKey, id);
+      }
+      catch (Exception)
+      {
+        return new BadRequestObjectResult(null);
+      }
+
+      return new OkObjectResult(result);
+    }
   }
 }

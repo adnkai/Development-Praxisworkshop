@@ -132,5 +132,32 @@ namespace Project
 
       return todos;
     }
+
+    public async Task<Todo> GetItem(string _pKey, string _id)
+    {
+      Todo todo;
+
+      if (this._table == null)
+      {
+        await GetTableAsync();
+      }
+
+      TableOperation operation = TableOperation.Retrieve<Todo>(_pKey, _id);
+
+      TableResult result;
+
+      try
+      {
+        result = await _table.ExecuteAsync(operation);
+        todo = (Todo)result.Result;
+      }
+      catch (System.Exception e)
+      {
+        System.Console.WriteLine(e.StackTrace);
+        throw;
+      }
+
+      return todo;
+    }
   }
 }
