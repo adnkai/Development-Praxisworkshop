@@ -56,8 +56,6 @@ namespace Development_Praxisworkshop.Helper
         {
           System.Console.WriteLine("Unnssuccessffull");
           System.Console.WriteLine(response.StatusCode);
-          System.Console.WriteLine(client.BaseAddress);
-          System.Console.WriteLine(client.DefaultRequestHeaders);
 
           return tmpTodos;
         }
@@ -91,8 +89,8 @@ namespace Development_Praxisworkshop.Helper
       {
         System.Console.WriteLine("Unnssuccessffull");
         System.Console.WriteLine(response.StatusCode);
-        System.Console.WriteLine(client.BaseAddress);
-        System.Console.WriteLine(client.DefaultRequestHeaders);
+
+        return await Task.FromResult<string>(null);
       }
 
       return await response.Content.ReadAsStringAsync();
@@ -100,7 +98,35 @@ namespace Development_Praxisworkshop.Helper
 
     private async Task<string> UpdateToDo(string _rowKey)
     {
-      var response = await client.GetAsync("/getTodos");
+      if (String.IsNullOrEmpty(_rowKey))
+      {
+        throw new NullReferenceException();
+      }
+      
+      var tData = await client.GetAsync($"getTodo/{_rowKey}");
+
+      if(!tData.IsSuccessStatusCode)
+      {
+        System.Console.WriteLine("Unnssuccessffull");
+        System.Console.WriteLine(tData.StatusCode);
+
+        return await Task.FromResult<string>(null);
+      }
+      
+      TodoModel toUpdate = JsonConvert.DeserializeObject<TodoModel>(await tData.Content.ReadAsStringAsync());
+      toUpdate.IsCompleted = true;
+
+      var content = new StringContent(JsonConvert.SerializeObject(toUpdate));
+
+      var response = await client.PostAsync("postTodo", content);
+
+      if (!response.IsSuccessStatusCode)
+      {
+        System.Console.WriteLine("Unnssuccessffull");
+        System.Console.WriteLine(response.StatusCode);
+
+        return await Task.FromResult<string>(null);
+      }
 
       return await response.Content.ReadAsStringAsync();
     }
@@ -116,9 +142,9 @@ namespace Development_Praxisworkshop.Helper
 
       var request = new HttpRequestMessage {
             Method = HttpMethod.Delete,
-            RequestUri = new Uri("deleteTodo"),
+            RequestUri = new Uri($"{client.BaseAddress}deleteTodo"),
             Content = new StringContent(json)
-        };
+      };
 
       var response = await client.SendAsync(request);
 
@@ -126,8 +152,8 @@ namespace Development_Praxisworkshop.Helper
       {
         System.Console.WriteLine("Unnssuccessffull");
         System.Console.WriteLine(response.StatusCode);
-        System.Console.WriteLine(client.BaseAddress);
-        System.Console.WriteLine(client.DefaultRequestHeaders);
+
+        return await Task.FromResult<string>(null);
       }
 
       return await response.Content.ReadAsStringAsync();
