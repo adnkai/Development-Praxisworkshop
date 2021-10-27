@@ -35,9 +35,12 @@ namespace Development_Praxisworkshop.Pages
       return Page();
     }
 
-    public async Task<IActionResult> OnPostInsertAsync()
+    public async Task<IActionResult> OnPostInsertAsync(string todoTask)
     {
-      var todoTask = Request.Form["todotask"];
+      if (String.IsNullOrEmpty(todoTask))
+      {
+        return RedirectToPage("/ToDoListFunction");
+      }
 
       await todo.PostToDo(todoTask);
 
@@ -45,7 +48,7 @@ namespace Development_Praxisworkshop.Pages
     }
 
     public async Task<IActionResult> OnPostMarkDoneAsync(string id)
-    {      
+    {
       await todo.MarkDoneToDo(id);
 
       return RedirectToPage("/ToDoListFunction");
