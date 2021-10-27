@@ -12,8 +12,8 @@ using Development_Praxisworkshop.Helper;
 
 namespace Development_Praxisworkshop.Pages
 {
-  [AllowAnonymous]
-  //[Authorize]
+  //[AllowAnonymous]
+  [Authorize]
   public class ToDoListFunctionModel : PageModel
   {
     private readonly ILogger<PrivacyModel> _logger;

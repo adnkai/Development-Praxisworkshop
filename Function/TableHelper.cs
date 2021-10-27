@@ -114,9 +114,6 @@ namespace Project
 
       TableQuery<Todo> query = new TableQuery<Todo>();
 
-
-      TableResult result;
-
       try
       {
         foreach (Todo t in _table.ExecuteQuery(query))

@@ -42,6 +42,7 @@ namespace Development_Praxisworkshop
             services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
 
+            services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
