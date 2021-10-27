@@ -12,7 +12,6 @@ namespace Development_Praxisworkshop.Helper
 {
   public class FunctionHelper
   {
-
     private readonly HttpClient client = new HttpClient();
 
     public FunctionHelper(IConfiguration config)

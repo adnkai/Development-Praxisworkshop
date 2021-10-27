@@ -28,33 +28,34 @@ namespace Development_Praxisworkshop.Pages
       todo = new FunctionHelper(_config);
     }
 
-    public void OnGet()
+    public async Task<IActionResult> OnGetAsync()
     {
-      todos = todo.GetToDos().GetAwaiter().GetResult();
+      todos = await todo.GetToDos();
+
+      return Page();
     }
 
-    public void OnPostInsert()
+    public async Task<IActionResult> OnPostInsertAsync()
     {
       var todoTask = Request.Form["todotask"];
 
-      todo.PostToDo(todoTask).GetAwaiter().GetResult();
-      todos = todo.GetToDos().GetAwaiter().GetResult();
+      await todo.PostToDo(todoTask);
+
+      return RedirectToPage("/ToDoListFunction");
     }
 
-    public void OnPostMarkDone(string id)
+    public async Task<IActionResult> OnPostMarkDoneAsync(string id)
     {      
-      todo.MarkDoneToDo(id).GetAwaiter().GetResult();
-      todos = todo.GetToDos().GetAwaiter().GetResult();
+      await todo.MarkDoneToDo(id);
 
-      RedirectToPage("/ToDoList");
+      return RedirectToPage("/ToDoListFunction");
     }
 
-    public void OnPostDeleteToDo(string deleteId)
+    public async Task<IActionResult> OnPostDeleteToDoAsync(string deleteId)
     {
-      todo.DeleteToDo(deleteId).GetAwaiter().GetResult();
-      todos = todo.GetToDos().GetAwaiter().GetResult();
+      await todo.DeleteToDo(deleteId);
 
-      RedirectToPage("/ToDoList");
+      return RedirectToPage("/ToDoListFunction");
     }
   }
 }

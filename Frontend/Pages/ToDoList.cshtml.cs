@@ -19,49 +19,45 @@ namespace Development_Praxisworkshop.Pages
         private readonly ILogger<PrivacyModel> _logger;
         private readonly IConfiguration _config;
         public List<TodoModel> todos;
+        private static TableAccountHelper todo;
 
         public ToDoListModel(ILogger<PrivacyModel> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
+            todo = new TableAccountHelper(_config);
         }
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            TableAccountHelper todo = new TableAccountHelper(_config);
             todos = todo.GetToDos();
+
+            return Page();
         }
 
-        public void OnPostInsert()
+        public async Task<IActionResult> OnPostInsertAsync()
         {
             var todoTask = Request.Form["todotask"];
-
-            TableAccountHelper todo = new TableAccountHelper(_config);
             
             var model = new TodoModel();
             model.TaskDescription = todoTask;
             
-            todo.PostToDo(model).GetAwaiter().GetResult();
-            todos = todo.GetToDos();
+            await todo.PostToDo(model);
+
+            return RedirectToPage("/ToDoList");
         }
 
-        public void OnPostMarkDone(string id)
-        {           
-           TableAccountHelper todo = new TableAccountHelper(_config);
-                        
-            todo.MarkDoneToDo(id).GetAwaiter().GetResult();
-            todos = todo.GetToDos();
+        public async Task<IActionResult> OnPostMarkDoneAsync(string id)
+        {                                   
+            await todo.MarkDoneToDo(id);
 
-            RedirectToPage("/ToDoList");
+            return RedirectToPage("/ToDoList");
         }
 
-        public void OnPostDeleteToDo(string deleteId)
-        {           
-           TableAccountHelper todo = new TableAccountHelper(_config);
-                        
-            todo.DeleteToDo(deleteId).GetAwaiter().GetResult();
-            todos = todo.GetToDos();
+        public async Task<IActionResult> OnPostDeleteToDoAsync(string deleteId)
+        {                                   
+            await todo.DeleteToDo(deleteId);
 
-            RedirectToPage("/ToDoList");
+            return RedirectToPage("/ToDoList");
         }
     }
 }
