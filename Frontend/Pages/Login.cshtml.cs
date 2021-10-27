@@ -14,20 +14,20 @@ namespace Development_Praxisworkshop.Pages
 {
     //[AllowAnonymous]
     [Authorize]
-    public class GalleryModel : PageModel
+    public class LoginModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
         private readonly IConfiguration _config;
-        public List<String> images;
-        public GalleryModel(ILogger<PrivacyModel> logger, IConfiguration config)
+
+        public LoginModel(ILogger<PrivacyModel> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
         }
         public void OnGet()
         {
-            StorageAccountHelper todo = new StorageAccountHelper(_config);
-            images = todo.GetImages();
+            RedirectToPage("Home");
         }
+
     }
 }
