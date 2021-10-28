@@ -21,6 +21,7 @@ jobs:
         platform: dotnet
         # Version of the programming platform used to build the web app; if no value is provided, Oryx will determine the version needed to build the repository.
         platform-version: 5
+        source-directory: /Frontend
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v2
       with:
