@@ -28,7 +28,7 @@ jobs:
         run: dotnet build Frontend --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
+        run: dotnet publish Frontend -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
