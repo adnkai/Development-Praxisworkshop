@@ -4,7 +4,7 @@ on: [push]
 
 env:
   AZURE_WEBAPP_NAME: developmentworkshop
-  AZURE_WEBAPP_PACKAGE_PATH: './Frontend'
+  AZURE_WEBAPP_PACKAGE_PATH: '/Frontend'
   DOTNET_VERSION: '5.0.x'
 
 jobs:
