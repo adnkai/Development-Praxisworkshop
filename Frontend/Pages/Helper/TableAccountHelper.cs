@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Azure.Storage;
 using Microsoft.Azure.Cosmos.Table;
-using Microsoft.ApplicationInsights;
-
 using Microsoft.Extensions.Configuration;
 
 namespace Development_Praxisworkshop.Helper
@@ -13,11 +11,9 @@ namespace Development_Praxisworkshop.Helper
   {
     private CloudTableClient _tableClient;
     private CloudTable _table;
-    readonly TelemetryClient _telemetryClient;
 
-    public TableAccountHelper(IConfiguration config, TelemetryClient telemetry)
+    public TableAccountHelper(IConfiguration config)
     {
-      _telemetryClient = telemetry;
 
       CloudStorageAccount _acc = CloudStorageAccount.Parse(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
       _tableClient = _acc.CreateCloudTableClient();
@@ -29,24 +25,20 @@ namespace Development_Praxisworkshop.Helper
 
     public List<TodoModel> GetToDos()
     {
-      _telemetryClient.TrackEvent("ListTodo");
       return EnumerateDocumentsAsync(_table);
     }
 
     public async Task<TodoModel> PostToDo(TodoModel _todo)
     {
-      _telemetryClient.TrackEvent("CreateTodo");
       return await InsertItem(_todo);
     }
 
     public async Task<TodoModel> MarkDoneToDo(string _rowKey)
     {
-      _telemetryClient.TrackEvent("MarkDoneTodo");
       return await UpdateToDo(_rowKey);
     }
     public async Task<TableResult> DeleteToDo(string _rowKey)
     {
-      _telemetryClient.TrackEvent("DeleteTodo");
       return await DelToDo(_rowKey);
     }
 

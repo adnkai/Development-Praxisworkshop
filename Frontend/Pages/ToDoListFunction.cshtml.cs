@@ -5,30 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
-using Microsoft.ApplicationInsights;
 
 using Development_Praxisworkshop.Helper;
 
 namespace Development_Praxisworkshop.Pages
 {
-  //[AllowAnonymous]
-  [Authorize]
   public class ToDoListFunctionModel : PageModel
   {
     private readonly ILogger<PrivacyModel> _logger;
     private readonly IConfiguration _config;
     public List<TodoModel> todos;
     private static FunctionHelper todo;
-    private readonly TelemetryClient _telemetryClient;
 
-    public ToDoListFunctionModel(ILogger<PrivacyModel> logger, IConfiguration config, TelemetryClient telemetryClient)
+    public ToDoListFunctionModel(ILogger<PrivacyModel> logger, IConfiguration config)
     {
-      _telemetryClient = telemetryClient;
       _logger = logger;
       _config = config;
-      todo = new FunctionHelper(_config, _telemetryClient);
+      todo = new FunctionHelper(_config);
     }
 
     public async Task<IActionResult> OnGetAsync()
