@@ -31,7 +31,9 @@ namespace Development_Praxisworkshop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")); // Fetch Auth Data from AppConfig
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")); // Fetch Auth Data from appsettings.json
+            
+            // Enable Authentication globally
             services.AddControllersWithViews(options =>
                 {
                     var policy = new AuthorizationPolicyBuilder()
@@ -39,11 +41,14 @@ namespace Development_Praxisworkshop
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 });
+            // Add MicrosoftIdentity middleware to basically any page
             services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
 
+            // Include Application Insights with config from appsettings.json
             services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
 
+            // Configure SignOut redirect (doesn't work though...)
             services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.Events.OnRemoteSignOut = async context =>
