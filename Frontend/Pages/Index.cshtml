@@ -1,10 +1,22 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Learn about this workshop at <a href="https://github.com/adnkai/Development-Praxisworkshop">ADN Distribution</a>.</p>
 </div>
+
+@if(@User.Identity.IsAuthenticated) {
+<table>
+    <tr>
+        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value</td>
+    </tr>
+    <tr>
+        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value</td>
+    </tr>
+   
+</table>
+}
