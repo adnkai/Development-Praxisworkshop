@@ -56,7 +56,7 @@ jobs:
           app-name: 'developmentworkshop'
           slot-name: 'production'
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          package: ./myapp
+          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
   
   
   frontend:
