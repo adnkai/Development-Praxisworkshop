@@ -40,7 +40,7 @@ jobs:
     runs-on: windows-latest
     needs: buildFrontend
     environment:
-      name: 'production'
+      name: 'DevWorkshop'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
