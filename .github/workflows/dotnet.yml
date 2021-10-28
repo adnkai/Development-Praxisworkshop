@@ -15,7 +15,6 @@ jobs:
     - name: App Service Web App Build Action
       uses: Azure/appservice-build@v2
       with:
-        source-directory: Frontend
         # Programming platform used to build the web app; if no value is provided, Oryx will determine the platform to build with. The supported values are "dotnet", "nodejs", "php" and "python".
         platform: dotnet
         # Version of the programming platform used to build the web app; if no value is provided, Oryx will determine the version needed to build the repository.
@@ -24,5 +23,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: developmentworkshop
+        working-directory: ./Frontend
         publish-profile: ${{ secrets.DevWorkshop.azureWebAppPublishProfile }}
 
