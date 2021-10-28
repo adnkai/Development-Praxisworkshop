@@ -24,8 +24,9 @@ jobs:
       # Run dotnet build and publish
       - name: dotnet build and publish
         run: |
+          working-directory: Frontend
           dotnet restore
-          dotnet build ./Frontend --configuration Release
+          dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
           
       # Deploy to Azure Web apps
