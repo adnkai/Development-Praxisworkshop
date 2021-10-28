@@ -25,15 +25,14 @@ namespace Project
       
       this.StorageAccount = System.Environment.GetEnvironmentVariable("STORAGE_NAME", EnvironmentVariableTarget.Process);
       this.StorageKey = System.Environment.GetEnvironmentVariable("STORAGE_KEY", EnvironmentVariableTarget.Process);
-      Console.WriteLine(StorageConnectionString);
+      this.StorageConnectionString = System.Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING", EnvironmentVariableTarget.Process);
       this.TableName = tableName;
     }
 
     private async Task GetTableAsync()
     {
       //Account
-      CloudStorageAccount storageAccount = new CloudStorageAccount(
-          new StorageCredentials(this.StorageAccount, this.StorageKey), true);
+      CloudStorageAccount storageAccount = CloudStorageAccount.Parse(this.StorageConnectionString);
 
       //Client
       CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
