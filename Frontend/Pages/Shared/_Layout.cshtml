@@ -6,7 +6,6 @@
     <title>@ViewData["Title"] - Development Praxisworkshop</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <header>
@@ -25,18 +24,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-                        @if(User.Identity.IsAuthenticated) {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/ToDoList">ToDo's</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/ToDoListFunction">ToDo's /w Function</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/ImageGallery">Gallery</a>
-                            </li>
-                        } 
-                        <partial name="_LoginPartial" />
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ToDoList">ToDo's</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ToDoListFunction">ToDo's /w Function</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ImageGallery">Gallery</a>
+                        </li>
 
                     </ul>
                 </div>
