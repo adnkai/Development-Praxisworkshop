@@ -43,6 +43,14 @@ namespace Development_Praxisworkshop
                 .AddMicrosoftIdentityUI();
 
             services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
+
+            services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.Events.OnRemoteSignOut = async context =>
+                {
+                    context.Response.Redirect("/");
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
