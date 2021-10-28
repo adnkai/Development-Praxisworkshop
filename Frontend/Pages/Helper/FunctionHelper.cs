@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using Microsoft.ApplicationInsights;
 
 using Microsoft.Extensions.Configuration;
 
@@ -13,10 +14,12 @@ namespace Development_Praxisworkshop.Helper
   public class FunctionHelper
   {
     private readonly HttpClient client = new HttpClient();
+    private readonly TelemetryClient _telemetryClient;
 
-    public FunctionHelper(IConfiguration config)
+    public FunctionHelper(IConfiguration config, TelemetryClient telemetryClient)
     {
-      //config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString");
+      _telemetryClient = telemetryClient;
+
       client.BaseAddress = new Uri(config.GetSection("Function").GetValue<string>("FunctionUri"));
 
       client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -25,21 +28,25 @@ namespace Development_Praxisworkshop.Helper
 
     public async Task<List<TodoModel>> GetToDos()
     {
+      _telemetryClient.TrackEvent("ListTodoFunction");
       return await EnumerateDocumentsAsync();
     }
 
     public async Task<string> PostToDo(string _todo)
     {
+      _telemetryClient.TrackEvent("CreateTodoFunction");
       return await InsertItem(_todo);
     }
 
     public async Task<string> MarkDoneToDo(string _rowKey)
     {
+      _telemetryClient.TrackEvent("MarkDoneTodoFunction");
       return await UpdateToDo(_rowKey);
     }
 
     public async Task<string> DeleteToDo(string _rowKey)
     {
+      _telemetryClient.TrackEvent("DeleteTodoFunction");
       return await DelToDo(_rowKey);
     }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.ApplicationInsights;
 
 using Development_Praxisworkshop.Helper;
 
@@ -20,12 +21,14 @@ namespace Development_Praxisworkshop.Pages
     private readonly IConfiguration _config;
     public List<TodoModel> todos;
     private static FunctionHelper todo;
+    private readonly TelemetryClient _telemetryClient;
 
-    public ToDoListFunctionModel(ILogger<PrivacyModel> logger, IConfiguration config)
+    public ToDoListFunctionModel(ILogger<PrivacyModel> logger, IConfiguration config, TelemetryClient telemetryClient)
     {
+      _telemetryClient = telemetryClient;
       _logger = logger;
       _config = config;
-      todo = new FunctionHelper(_config);
+      todo = new FunctionHelper(_config, _telemetryClient);
     }
 
     public async Task<IActionResult> OnGetAsync()
