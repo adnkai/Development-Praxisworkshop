@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
-
+    defaults:
+      run:
+        working-directory: Frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +19,11 @@ jobs:
       with:
         # Programming platform used to build the web app; if no value is provided, Oryx will determine the platform to build with. The supported values are "dotnet", "nodejs", "php" and "python".
         platform: dotnet
-        source-directory: ./Frontend
         # Version of the programming platform used to build the web app; if no value is provided, Oryx will determine the version needed to build the repository.
         platform-version: 5
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v2
       with:
         app-name: developmentworkshop
-        working-directory: ./Frontend
         publish-profile: ${{ secrets.DevWorkshop.azureWebAppPublishProfile }}
 
