@@ -4,7 +4,8 @@
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
         "STORAGE_NAME": "",
-        "STAORAGE_KEY": "",
+        "STORAGE_KEY": "",
+        "STORAGE_CONNECTION_STRING": "@Microsoft.KeyVault(SecretUri=*SecretUriFromKeyVault*)",
         "TABLE_PARTITION_KEY": ""
     }
 }
