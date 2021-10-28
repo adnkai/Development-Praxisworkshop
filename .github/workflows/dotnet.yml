@@ -60,6 +60,7 @@ jobs:
   
   
   frontend:
+    if: ${{ false }}
     environment: DevWorkshop
     runs-on: ubuntu-latest
 
