@@ -37,6 +37,7 @@ jobs:
           path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
   packageFrontend:
+    needs: buildFrontend
     runs-on: windows-latest
     steps:
       - name: "Package content"
@@ -46,7 +47,7 @@ jobs:
   
   deployWebApp:
     runs-on: windows-latest
-    needs: buildFrontend
+    needs: packageFrontend
     environment:
       name: 'DevWorkshop'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
