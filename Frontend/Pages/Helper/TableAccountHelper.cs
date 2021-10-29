@@ -104,7 +104,7 @@ namespace Development_Praxisworkshop.Helper
         }
 
         TodoModel m = (TodoModel)result.Result;
-        m.IsCompleted = true;
+        m.IsCompleted = m.IsCompleted ? false : true;
 
         updatedToDo = await InsertItem(m);
       }

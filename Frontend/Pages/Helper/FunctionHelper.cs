@@ -120,7 +120,7 @@ namespace Development_Praxisworkshop.Helper
       }
       
       TodoModel toUpdate = JsonConvert.DeserializeObject<TodoModel>(await tData.Content.ReadAsStringAsync());
-      toUpdate.IsCompleted = true;
+      toUpdate.IsCompleted = toUpdate.IsCompleted ? false : true;
 
       var content = new StringContent(JsonConvert.SerializeObject(toUpdate));
 

@@ -32,6 +32,8 @@
                 @if(todo.IsCompleted)
                 {
                     @Html.Raw("&#x2713;")
+                    <button type="submit" class="btn btn-outline-warning" asp-page-handler="MarkDone">Undo</button>
+                    <input type="hidden" name="id" value="@todo.RowKey" />
                 }
                 else
                 {
