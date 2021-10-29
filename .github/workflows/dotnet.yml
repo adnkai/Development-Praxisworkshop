@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: "Package content"
         run: |
-          Get-ChildItem $pwd | Compress-Archive -Destination ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
+          Get-ChildItem ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp | Compress-Archive -Destination ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
           shell: pwsh
   
   deployWebApp:
