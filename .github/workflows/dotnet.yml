@@ -39,7 +39,7 @@ jobs:
       - name: "Package content"
         run: |
           Get-ChildItem ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp | Compress-Archive -Destination ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
-          shell: pwsh
+        shell: pwsh
   
   deployWebApp:
     runs-on: windows-latest
