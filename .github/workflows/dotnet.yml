@@ -30,16 +30,12 @@ jobs:
       - name: dotnet publish
         run: dotnet publish Frontend -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: .net-app
-          path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
+      #- name: Upload artifact for deployment job
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: .net-app
+      #    path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
-  packageFrontend:
-    needs: buildFrontend
-    runs-on: windows-latest
-    steps:
       - name: "Package content"
         run: |
           Get-ChildItem ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp | Compress-Archive -Destination ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
@@ -47,7 +43,7 @@ jobs:
   
   deployWebApp:
     runs-on: windows-latest
-    needs: packageFrontend
+    needs: buildFrontend
     environment:
       name: 'DevWorkshop'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
