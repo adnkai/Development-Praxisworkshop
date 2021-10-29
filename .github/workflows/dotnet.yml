@@ -36,6 +36,14 @@ jobs:
           name: .net-app
           path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp
 
+  packageFrontend:
+    runs-on: windows-latest
+    steps:
+      - name: "Package content"
+        run: |
+          Get-ChildItem $pwd | Compress-Archive -Destination ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
+          shell: pwsh
+  
   deployWebApp:
     runs-on: windows-latest
     needs: buildFrontend
@@ -44,11 +52,6 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: .net-app
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -56,7 +59,7 @@ jobs:
           app-name: 'developmentworkshop'
           slot-name: 'production'
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
+          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
   
   
   frontend:
