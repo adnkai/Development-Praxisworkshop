@@ -128,6 +128,7 @@ namespace Project
         System.Console.WriteLine(e.StackTrace);
         throw;
       }
+      todos.Sort((x, y) => x.TaskDescription.CompareTo(y.TaskDescription));
 
       return todos;
     }

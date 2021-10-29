@@ -59,6 +59,7 @@ namespace Development_Praxisworkshop.Helper
       {
         tmpTodos.Add(todo);
       }
+      tmpTodos.Sort((x, y) => x.TaskDescription.CompareTo(y.TaskDescription));
 
       return tmpTodos;
     }
