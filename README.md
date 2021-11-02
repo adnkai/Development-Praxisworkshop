@@ -46,3 +46,6 @@ Erfahrungen im Programmieren und Git werden vorausgesetzt.
 Die Kursinhalte werden in C# erarbeitet.
 
 ADN Shop: [ADN Praxis Workshop - Azure Development](https://shop.adn.de/Hersteller/Microsoft-ADN/ADN-Praxis-Workshop-Azure-Development.html)
+
+# Disclaimer
+Der hier hinterlegte Code, inkl. aller Beispiele und Konfigurationsdateien dient ausschließlich schulischen Zwecken und sollte nicht ohne weitere Prüfung für produktive Szenarien verwendet werden.
