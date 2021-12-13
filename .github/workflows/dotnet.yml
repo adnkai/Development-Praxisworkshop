@@ -3,10 +3,10 @@ name: .NET Core CI
 on: [push]
 
 env:
-  AZURE_WEBAPP_NAME: developmentworkshop
+  AZURE_WEBAPP_NAME: devworkshop
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   DOTNET_VERSION: '5.0.x'
-  AZURE_FUNCTION_NAME: wrkshpfunc
+  AZURE_FUNCTION_NAME: devworkshopfunc
   AZURE_FUNCTION_PACKAGE_PATH: '.'
   DOTNET_VERSION_FUNCTION: '3.1.x'
 
@@ -45,7 +45,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'developmentworkshop'
+          app-name: '${{AZURE_WEBAPP_NAME}}'
           slot-name: 'production'
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
