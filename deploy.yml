@@ -17,7 +17,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: frontend
-        image: aksregistrykr.azurecr.io/frontend:v1 # private
+        image: aksregistrykr.azurecr.io/frontend:v4 # private
         imagePullPolicy: Always
         resources:
           requests:
@@ -27,8 +27,8 @@ spec:
             cpu: 250m
             memory: 512Mi
         ports:
-        - name: http
-          containerPort: 80 
+        - name: https
+          containerPort: 443
         volumeMounts:
         - name: claimvolumessd
           mountPath: "/mnt/volumeMountSsd"
@@ -42,14 +42,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: frontend # sets dns name label to http://frontend.<region>.cloudapp.azure.com/
   labels:
     app: frontend
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - port: 443 # Must be https for oAuth redirect
       protocol: TCP
-      targetPort: http
+      targetPort: https
   selector:
     app: frontend
 ---
