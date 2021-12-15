@@ -13,7 +13,7 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:latest
 WORKDIR /app
 COPY --from=build-env /app/out .
-ENV ASPNETCORE_URLS http://*:80
+ENV ASPNETCORE_URLS http://*:443
 # Create local file?
-EXPOSE 80
+EXPOSE 443
 ENTRYPOINT ["dotnet", "Development-Praxisworkshop.dll"]
