@@ -49,3 +49,12 @@ ADN Shop: [ADN Praxis Workshop - Azure Development](https://shop.adn.de/Herstell
 
 # Disclaimer
 Der hier hinterlegte Code, inkl. aller Beispiele und Konfigurationsdateien dient ausschließlich schulischen Zwecken und sollte nicht ohne weitere Prüfung für produktive Szenarien verwendet werden.
+
+
+# Troubleshooting
+Using Azure Cloud Shell to zip deploy the application:
+
+- From the /Fronted directory
+  - dotnet publish -c Release -o ../myapp
+  - zip -r deploy.zip ../myapp
+  - az webapp deploy --resource-group <group-name> --name <app-name> --src-path deploy.zip
