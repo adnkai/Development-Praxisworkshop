@@ -14,7 +14,9 @@ using Development_Praxisworkshop.Helper;
 namespace Development_Praxisworkshop.Pages
 {
   //[AllowAnonymous]
+  //[Authorize(Policy = "ClaimsTest")]
   [Authorize]
+  
   public class ToDoListModel : PageModel
   {
     private readonly ILogger<PrivacyModel> _logger;
@@ -32,6 +34,7 @@ namespace Development_Praxisworkshop.Pages
     }
     public async Task<IActionResult> OnGetAsync()
     {
+
       todos = todo.GetToDos();
 
       return Page();

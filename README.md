@@ -58,3 +58,6 @@ Using Azure Cloud Shell to zip deploy the application:
   - dotnet publish -c Release -o ../myapp
   - zip -r deploy.zip ../myapp
   - az webapp deploy --resource-group <group-name> --name <app-name> --src-path deploy.zip
+
+- nuget package manager extension
+  - DELETE C:\Users\<username>\AppData\Roaming\NuGet directory, and then restore it using dotnet restore

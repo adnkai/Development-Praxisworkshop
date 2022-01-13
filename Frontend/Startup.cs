@@ -33,6 +33,11 @@ namespace Development_Praxisworkshop
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")); // Fetch Auth Data from appsettings.json
             
+            // Role Based Claims
+            services.AddAuthorization(options => {
+                options.AddPolicy("ClaimsTest", policy => policy.RequireClaim("Contacts.Read"));
+            });
+
             // Enable Authentication globally
             services.AddControllersWithViews(options =>
                 {
