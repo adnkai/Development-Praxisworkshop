@@ -4,6 +4,7 @@ on: [push]
 
 env:
   AZURE_WEBAPP_NAME: devworkshop
+  TEST: t
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   DOTNET_VERSION: '5.0.x'
   AZURE_FUNCTION_NAME: devworkshopfunc
