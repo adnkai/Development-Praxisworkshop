@@ -10,7 +10,6 @@ namespace Project
   {
     public string StorageAccount { get; }
     public string StorageKey { get; }
-    public string StorageConnectionString { get; }
     public string TableName { get; }
 
     private CloudTable _table { get; set; }
@@ -25,16 +24,15 @@ namespace Project
       
       this.StorageAccount = System.Environment.GetEnvironmentVariable("STORAGE_NAME", EnvironmentVariableTarget.Process);
       this.StorageKey = System.Environment.GetEnvironmentVariable("STORAGE_KEY", EnvironmentVariableTarget.Process);
-      this.StorageConnectionString = System.Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING", EnvironmentVariableTarget.Process);
-      Console.WriteLine(StorageConnectionString);
       this.TableName = tableName;
     }
 
     private async Task GetTableAsync()
     {
       //Account
-      CloudStorageAccount storageAccount = CloudStorageAccount.Parse(this.StorageConnectionString);
-
+      StorageCredentials storageCredentials = new StorageCredentials(this.StorageAccount, this.StorageKey);
+      CloudStorageAccount storageAccount = new CloudStorageAccount(storageCredentials, useHttps: true);
+      
       //Client
       CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
