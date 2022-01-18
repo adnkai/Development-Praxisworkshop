@@ -1,0 +1,53 @@
+#Variables
+$RGName="AzureDevWorkshopTP"
+$Location="northeurope"
+$WebAppPlanName="demoPlanDev"
+$WebAppName="wrkshpwebfrontend"
+$DataStorename="wrkshpdatastore"
+$ImagesContainerName="images"
+$FunctionStorage="wrkshpfunctionstore"
+$FunctionName="wrkshptodofunction"
+$KeyVaultName="wrkshpkeyvault"
+$SecretName="StorageConnectionString"
+#--------------------------------------------
+$RegistryName="myacrtp"
+$ImageTag="frontend:v1"
+$AKSName="myakstp"
+
+#WebApp
+az group create --name $RGName --location $Location
+az appservice plan create -n $WebAppPlanName -g $RGName --sku S1 --location $Location
+az webapp create -n $WebAppName -g $RGName --plan $WebAppPlanName --location $Location
+
+#Deploy WebApp
+#az webapp deploy -g $RGName -n $WebAppName --src-path .\deploy.zip
+
+#StorageAccount
+az storage account create -g $RGName -n $DataStorename --location $Location
+az storage container create -n $ImagesContainerName --public-access blob --account-name $DataStorename --account-key <KEY_1>
+
+#Function
+az storage account create -g $RGName -n $FunctionStorage --location $Location
+az functionapp create -g $RGName --consumption-plan-location $Location --os-type Linux --runtime dotnet --storage-account $FunctionStorage -n $FunctionName --disable-app-insights
+
+#KeyVault
+az keyvault create -n $KeyVaultName -g $RGName --location $Location
+az keyvault secret set -n $SecretName --value <CONNECTIONSTRING> --vault-name $KeyVaultName
+az functionapp identity assign -g $RGName -n $FunctionName
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#ACR
+az acr create -g $RGName -n $RegistryName --sku Basic
+az acr login -n $RegistryName
+#az acr update -n $RegistryName --admin-enabled true
+#az acr credential show -n $Registry --query "passwords[0].value"
+#$RegistryFull=$(az acr list -g $RGName --query "[].{acrLoginServer:loginServer}" --output tsv)
+#docker tag Frontend $RegistryFull"/"$ImageTag
+#docker push $RegistryFull"/"$ImageTag
+az acr build --image $ImageTag --registry $RegistryName --file dockerfile .
+
+#AKS
+az aks create -g $RGName -n $AKSName --node-count 1 --enable-addons monitoring --generate-ssh-keys
+az aks get-credentials -g $RGName -n $AKSName
+
+kubectl apply -f deploy.yml

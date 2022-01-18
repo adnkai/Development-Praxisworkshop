@@ -17,7 +17,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: frontend
-        image: aksregistrykr.azurecr.io/frontend:v4 # private
+        image: myacrtp.azurecr.io/frontend:v1 # private
         imagePullPolicy: Always
         resources:
           requests:
@@ -54,22 +54,22 @@ spec:
       targetPort: https
   selector:
     app: frontend
----
+#---
 # Deployment test MultiContainerPod
-apiVersion: v1
-kind: Pod
-metadata:
-  name: multi-pod
-spec:
+#apiVersion: v1
+#kind: Pod
+#metadata:
+#  name: multi-pod
+#spec:
 
-  restartPolicy: Never
-  containers:
+#  restartPolicy: Never
+#  containers:
 
-  - name: frontendpod
-    image: aksregistrykr.azurecr.io/frontend:v1
+#  - name: frontendpod
+#    image: myacrtp.azurecr.io/frontend:v1
 
-  - name: backendpod
-    image: akaino/backend:v3
+#  - name: backendpod
+#    image: akaino/backend:v3
 
 
 ---
@@ -84,7 +84,7 @@ mountOptions:
   - dir_mode=0777
   - file_mode=0777
 parameters:
-  storageAccount: devworkshopstor
+  storageAccount: wrkshpdatastore
   location: northeurope
 
 ---
@@ -96,8 +96,8 @@ metadata:
   name: azurefile-secret
 type: Opaque
 data:
-  azurestorageaccountname: ZGV2d29ya3Nob3BzdG9yZQ==
-  azurestorageaccountkey: SG1rY2ZvWEdQb2pQdW9VOW82eERkR0dFaWY2M25udzRwNDM5cWYvb0dJNHo3b2dVMFJJYjZjSGUyU2lhTWdCK2RSamQ5RitYa3lGeUNKa1JXR3lFSEE9PQ==
+  azurestorageaccountname: d3Jrc2hwZGF0YXN0b3Jl
+  azurestorageaccountkey: <KEY_1_BASE64Encoded>
 
 ---
 # Create a persistent volume, with the corresponding StorageClass and the reference to the Azure File secret.
