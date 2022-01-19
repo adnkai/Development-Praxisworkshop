@@ -65,11 +65,11 @@ Using Azure Cloud Shell to zip deploy the application:
 # Vorbereitung
 Mit folgenden Tools werden wir im Workshop arbeiten:
 
-- Dotnet 3.1/5.0
+- Dotnet 3.1/6.0
   - https://dotnet.microsoft.com/en-us/download/dotnet/3.1
-  - https://dotnet.microsoft.com/en-us/download/dotnet/5.0
-- Azure Function Core Tools (v3)
-  - https://docs.microsoft.com/de-de/azure/azure-functions/functions-run-local?tabs=v3
+  - https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+- Azure Function Core Tools (v4)
+  - https://docs.microsoft.com/de-de/azure/azure-functions/functions-run-local?tabs=v4
 - Azure CLI 
   - https://docs.microsoft.com/de-de/cli/azure/install-azure-cli
 - Visual Studio Code
