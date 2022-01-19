@@ -19,20 +19,42 @@ az group create --name $RGName --location $Location
 az appservice plan create -n $WebAppPlanName -g $RGName --sku S1 --location $Location
 az webapp create -n $WebAppName -g $RGName --plan $WebAppPlanName --location $Location
 
+#Set AppSettings
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Function__FunctionUri=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Function__DefaultHostKey=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings StorageAccount__StorageConnectionString=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings StorageAccount__TablePartitionKey=TODO
+az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__VaultUri=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__StorageAccountCredentials=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings ApplicationInsights__InstrumentationKey=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__Instance=https://login.microsoftonline.com/
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__Domain=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientId=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__TenantId=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientSecret=PLACEHOLDER
+
 #Deploy WebApp
 #az webapp deploy -g $RGName -n $WebAppName --src-path .\deploy.zip
 
 #StorageAccount
 az storage account create -g $RGName -n $DataStorename --location $Location
-az storage container create -n $ImagesContainerName --public-access blob --account-name $DataStorename --account-key <KEY_1>
+$key1=(az storage account keys list -g $RGName -n $DataStorename --query [0].value -o tsv)
+$ConnString=(az storage account show-connection-string -g $RGName -n $DataStorename -o tsv)
+az storage container create -n $ImagesContainerName --public-access blob --account-name $DataStorename --account-key $key1
 
 #Function
 az storage account create -g $RGName -n $FunctionStorage --location $Location
 az functionapp create -g $RGName --consumption-plan-location $Location --os-type Linux --runtime dotnet --storage-account $FunctionStorage -n $FunctionName --disable-app-insights
 
+#Set Function AppSettings
+az functionapp config appsettings set -n $FunctionName -g $RGName --settings "STORAGE_NAME=PLACEHOLDER"
+az functionapp config appsettings set -n $FunctionName -g $RGName --settings "STORAGE_KEY=PLACEHOLDER"
+az functionapp config appsettings set -n $FunctionName -g $RGName --settings "STORAGE_CONNECTION_STRING=@Microsoft.KeyVault(SecretUri=PLACEHOLDER)"
+az functionapp config appsettings set -n $FunctionName -g $RGName --settings "TABLE_PARTITION_KEY=TODO"
+
 #KeyVault
 az keyvault create -n $KeyVaultName -g $RGName --location $Location
-az keyvault secret set -n $SecretName --value <CONNECTIONSTRING> --vault-name $KeyVaultName
+az keyvault secret set -n $SecretName --value $ConnString --vault-name $KeyVaultName
 az functionapp identity assign -g $RGName -n $FunctionName
 
 #--------------------------------------------------------------------------------------------------------------------------------------
@@ -44,10 +66,9 @@ az acr login -n $RegistryName
 #$RegistryFull=$(az acr list -g $RGName --query "[].{acrLoginServer:loginServer}" --output tsv)
 #docker tag Frontend $RegistryFull"/"$ImageTag
 #docker push $RegistryFull"/"$ImageTag
-az acr build --image $ImageTag --registry $RegistryName --file dockerfile .
+#az acr build --image $ImageTag --registry $RegistryName --file dockerfile .
 
 #AKS
-az aks create -g $RGName -n $AKSName --node-count 1 --enable-addons monitoring --generate-ssh-keys
-az aks get-credentials -g $RGName -n $AKSName
-
-kubectl apply -f deploy.yml
+#az aks create -g $RGName -n $AKSName --node-count 1 --enable-addons monitoring --generate-ssh-keys
+#az aks get-credentials -g $RGName -n $AKSName
+#kubectl apply -f deploy.yml
