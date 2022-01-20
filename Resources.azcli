@@ -54,7 +54,8 @@ FunctionUri="https://"$(az functionapp config hostname list --resource-group $RG
 #KeyVault
 az keyvault create -n $KeyVaultName -g $RGName --location $Location
 az keyvault secret set -n $SecretName --value $ConnString --vault-name $KeyVaultName
-az functionapp identity assign -g $RGName -n $FunctionName
+PrincipalID=$(az functionapp identity assign -g $RGName -n $FunctionName -o tsv --query principalId)
+az keyvault set-policy -n $KeyVaultName --secret-permissions get --object-id $PrincipalID
 KVSecretUri="https://"$KeyVaultName".vault.azure.net/secrets/"$SecretName
 KVUri="https://"$KeyVaultName".vault.azure.net/"
 

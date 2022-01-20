@@ -54,15 +54,27 @@ Der hier hinterlegte Code, inkl. aller Beispiele und Konfigurationsdateien dient
 # Troubleshooting
 Using Azure Cloud Shell to zip deploy the application:
 
-- From the /Fronted directory
-  - dotnet publish -c Release -o ../myapp
-  - zip -r deploy.zip ../myapp
-  - az webapp deploy --resource-group <group-name> --name <app-name> --src-path deploy.zip
+### From the /Fronted directory
+``` powershell
+ dotnet publish -c Release -o ./myapp
+ zip -r deploy.zip ./myapp
+ az webapp deploy --resource-group <group-name> --name <app-name> --src-path deploy.zip
+```
 
-- nuget package manager extension
-  - DELETE C:\Users\<username>\AppData\Roaming\NuGet directory, and then restore it using dotnet restore
+### NuGet Package Manager Extension reparieren
+``` powershell 
+rm -r "C:\Users\<username>\AppData\Roaming\NuGet"
+dotnet restore
+```
 
-# Vorbereitung
+
+### .Net 6 in der CloudShell installieren
+``` powershell
+ wget -q -O - "https://dot.net/v1/dotnet-install.sh" | bash -s -- --version 6.0.101
+ export PATH="~/.dotnet:$PATH"
+ echo "export PATH=~/.dotnet:\$PATH" >> ~/.bashrc
+```
+# Vorbereitung für lokales Arbeiten
 Mit folgenden Tools werden wir im Workshop arbeiten:
 
 - Dotnet 3.1/6.0
