@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "STORAGE_NAME": "wrkshpstor",
+        "STAORAGE_KEY": "4Wzj2SmGwyjJ0JJTFXTk1FRGd4QmnInClmsQWaI8i3UfRoFJAk9zUtBEadGoP/oN8nmHwWUqKuaE5OIdVC+fbw==",
+        "TABLE_PARTITION_KEY": "TODO"
+    }
+}
