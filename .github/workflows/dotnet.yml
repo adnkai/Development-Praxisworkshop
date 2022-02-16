@@ -4,12 +4,11 @@ on: [push]
 
 env:
   AZURE_WEBAPP_NAME: wrkshpwebfrontend
-  TEST: t
   AZURE_WEBAPP_PACKAGE_PATH: '.'
-  DOTNET_VERSION: '5.0.x'
+  DOTNET_VERSION: '6.0.x'
   AZURE_FUNCTION_NAME: wrkshptodofunction
   AZURE_FUNCTION_PACKAGE_PATH: '.'
-  DOTNET_VERSION_FUNCTION: '3.1.x'
+  DOTNET_VERSION_FUNCTION: '6.0.x'
 
 jobs:
   buildFrontend:
