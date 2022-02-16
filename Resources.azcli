@@ -51,8 +51,8 @@ FunctionUri="https://"$(az functionapp config hostname list --resource-group $RG
 #dotnet publish -c Release -o .\myapp
 #Compress-Archive .\myapp\* deploy.zip -force
 
-#az functionapp deployment source config-zip -g $RGName -n $FunctionName --src deploy.zip
-#Publish-AzWebapp -ResourceGroupName AzureDevWorkshopTPes -Name wrkshptodofunctiones -ArchivePath "COMPLETE_PATH_TO_ZIP\deploy.zip"
+#az functionapp deployment source config-zip -g $RGName -n $FunctionName --src deploy.zip #V2.32.0 not working - Use PowerShell CMD
+#Publish-AzWebapp -ResourceGroupName $RGName -Name $FunctionName -ArchivePath "COMPLETE_PATH_TO_ZIP\deploy.zip"
 
 #KeyVault
 az keyvault create -n $KeyVaultName -g $RGName --location $Location
