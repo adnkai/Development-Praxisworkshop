@@ -92,10 +92,18 @@ jobs:
       - uses: actions/checkout@main
       
       # Setup .NET Core SDK
-      - name: Setup .NET Core
+      - name: Setup .NET Core 3.1	
+        uses: actions/setup-dotnet@v1	
+        with:	
+          dotnet-version: 3.1.x
+      - name: Setup .NET Core 5.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION_FUNCTION }} 
+          dotnet-version: 5.0.x
+      - name: Setup .NET Core 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
       
       # Run dotnet build and publish Function
       - name: dotnet build and publish Function
