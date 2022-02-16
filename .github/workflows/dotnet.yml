@@ -3,13 +3,12 @@ name: .NET Core CI
 on: [push]
 
 env:
-  AZURE_WEBAPP_NAME: devworkshop
-  TEST: t
+  AZURE_WEBAPP_NAME: wrkshpwebfrontend
   AZURE_WEBAPP_PACKAGE_PATH: '.'
-  DOTNET_VERSION: '5.0.x'
-  AZURE_FUNCTION_NAME: devworkshopfunc
+  DOTNET_VERSION: '6.0.x'
+  AZURE_FUNCTION_NAME: wrkshptodofunction
   AZURE_FUNCTION_PACKAGE_PATH: '.'
-  DOTNET_VERSION_FUNCTION: '3.1.x'
+  DOTNET_VERSION_FUNCTION: '6.0.x'
 
 jobs:
   buildFrontend:
@@ -22,7 +21,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }} 
           include-prerelease: true
 
       - name: Build with dotnet
@@ -93,15 +92,24 @@ jobs:
       - uses: actions/checkout@main
       
       # Setup .NET Core SDK
-      - name: Setup .NET Core
+      - name: Setup .NET Core 3.1	
+        uses: actions/setup-dotnet@v1	
+        with:	
+          dotnet-version: 3.1.x
+      - name: Setup .NET Core 5.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION_FUNCTION }} 
+          dotnet-version: 5.0.x
+      - name: Setup .NET Core 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
       
       # Run dotnet build and publish Function
       - name: dotnet build and publish Function
         working-directory: ./Function
         run: |
+          dotnet clean
           dotnet restore
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_FUNCTION_PACKAGE_PATH }}/myfunc' 
