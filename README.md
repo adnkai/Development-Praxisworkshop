@@ -78,7 +78,7 @@ dotnet restore
 Mit folgenden Tools werden wir im Workshop arbeiten:
 
 - Dotnet 3.1/6.0
-  - https://dotnet.microsoft.com/en-us/download/dotnet/3.1
+  - https://dotnet.microsoft.com/en-us/download/dotnet/3.1 (not necessarily)
   - https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 - Azure Function Core Tools (v4)
   - https://docs.microsoft.com/de-de/azure/azure-functions/functions-run-local?tabs=v4

@@ -17,7 +17,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: frontend
-        image: myacrtp.azurecr.io/frontend:v1 # private
+        image: <YOUR_ACR_NAME>.azurecr.io/frontend:v1 # private
         imagePullPolicy: Always
         resources:
           requests:
@@ -66,7 +66,7 @@ spec:
 #  containers:
 
 #  - name: frontendpod
-#    image: myacrtp.azurecr.io/frontend:v1
+#    image: <YOUR_ACR_NAME>.azurecr.io/frontend:v1
 
 #  - name: backendpod
 #    image: akaino/backend:v3
@@ -84,8 +84,8 @@ mountOptions:
   - dir_mode=0777
   - file_mode=0777
 parameters:
-  storageAccount: wrkshpdatastore
-  location: northeurope
+  storageAccount: <YOUR_STORAGE_ACCOUNT_NAME>
+  location: germanywestcentral
 
 ---
 # Create a Secret to hold the name and key of the Storage Account
@@ -96,7 +96,7 @@ metadata:
   name: azurefile-secret
 type: Opaque
 data:
-  azurestorageaccountname: d3Jrc2hwZGF0YXN0b3Jl
+  azurestorageaccountname: <YOUR_STORAGE_ACCOUNT_NAME_BASE64Encoded>
   azurestorageaccountkey: <KEY_1_BASE64Encoded>
 
 ---

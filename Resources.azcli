@@ -1,20 +1,23 @@
 #Run this script in Azure CloudShell
 
 #Variables
-RGName="AzureDevWorkshopTP"
-Location="northeurope"
-WebAppPlanName="demoPlanDev"
-WebAppName="wrkshpwebfrontend"
-DataStorename="wrkshpdatastore"
+Suffix=$(head -n 10 /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1) #RandomString - To Be Replaced
+RGName="AzureDevWorkshop"$Suffix
+Location="germanywestcentral"
+WebAppPlanName="demoPlanDev"$Suffix
+WebAppName="wrkshpwebfrontend"$Suffix
+DataStorename="wrkshpdatastore"$Suffix
 ImagesContainerName="images"
-FunctionStorage="wrkshpfunctionstore"
-FunctionName="wrkshptodofunction"
-KeyVaultName="wrkshpkeyvault"
+FunctionStorage="wrkshpfunctionstore"$Suffix
+FunctionName="wrkshptodofunction"$Suffix
+KeyVaultName="wrkshpkeyvault"$Suffix
 SecretName="StorageConnectionString"
+AppInsightsName="wrkshpmonitoring"$Suffix
+WorkspaceName="wrkshpmonitoringworspace"$Suffix
 #--------------------------------------------
-RegistryName="myacrtpr"
+RegistryName="myacr"$Suffix
 ImageTag="frontend:v1"
-AKSName="myakstpr"
+AKSName="myaks"$Suffix
 
 #WebApp
 az group create --name $RGName --location $Location
@@ -26,19 +29,19 @@ FrontendUri=$(az webapp show --name $WebAppName --resource-group $RGName -o tsv 
 #dotnet clean
 #dotnet build
 #dotnet publish -c Release -o .\myapp
-#Compress-Archive .\myapp\* deploy.zip
+#Compress-Archive .\myapp\* deploy.zip -force
 
-#az webapp deploy -g $RGName -n $WebAppName --src-path .\deploy.zip
+#az webapp deploy -g $RGName -n $WebAppName --src-path .\deploy.zip --type zip
 
 #StorageAccount
-az storage account create -g $RGName -n $DataStorename --location $Location
+az storage account create -g $RGName -n $DataStorename --location $Location --sku Standard_LRS
 Key1=$(az storage account keys list -g $RGName -n $DataStorename --query [0].value -o tsv)
 ConnString=$(az storage account show-connection-string -g $RGName -n $DataStorename -o tsv)
 az storage container create -n $ImagesContainerName --public-access blob --account-name $DataStorename --account-key $Key1
 
 #Function
-az storage account create -g $RGName -n $FunctionStorage --location $Location
-az functionapp create -g $RGName --consumption-plan-location $Location --os-type Linux --runtime dotnet --storage-account $FunctionStorage -n $FunctionName --disable-app-insights
+az storage account create -g $RGName -n $FunctionStorage --location $Location --sku Standard_LRS
+az functionapp create -g $RGName --consumption-plan-location $Location --os-type Linux --runtime dotnet --storage-account $FunctionStorage -n $FunctionName --disable-app-insights --functions-version 4
 FunctionKey=$(az functionapp keys list -g $RGName -n $FunctionName -o tsv --query "functionKeys")
 FunctionUri="https://"$(az functionapp config hostname list --resource-group $RGName --webapp-name $FunctionName --query [0].name -o tsv)"/api/"
 
@@ -46,7 +49,7 @@ FunctionUri="https://"$(az functionapp config hostname list --resource-group $RG
 #dotnet clean
 #dotnet build
 #dotnet publish -c Release -o .\myapp
-#Compress-Archive .\myapp\* deploy.zip
+#Compress-Archive .\myapp\* deploy.zip -force
 
 #az functionapp deployment source config-zip -g $RGName -n $FunctionName --src deploy.zip
 #Publish-AzWebapp -ResourceGroupName AzureDevWorkshopTPes -Name wrkshptodofunctiones -ArchivePath "COMPLETE_PATH_TO_ZIP\deploy.zip"
@@ -70,19 +73,27 @@ Secret=$(az ad app credential reset --id $AppId -o tsv --query password)
 ClientId=$(az ad app show --id $AppId -o tsv --query appId)
 TenantId=$(az account show -o tsv --query tenantId)
 
+#Application Insights
+az extension add -n application-insights
+az monitor log-analytics workspace create -g $RGName -n $WorkspaceName
+WorkspaceId=$(az monitor log-analytics workspace show -g $RGName -n $WorkspaceName --query id -o tsv)
+az monitor app-insights component create --app $AppInsightsName --location $Location --kind web -g $RGName --application-type web --workspace $WorkspaceId
+#az monitor app-insights component connect-webapp -g $RGName -a $AppInsightsName --web-app $WebAppName --enable-profiler --enable-snapshot-debugger
+InstrumentationKey=$(az monitor app-insights component show --app $AppInsightsName -g $RGName --query instrumentationKey -o tsv)
+
 #Set AppSettings
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Function__FunctionUri=$FunctionUri
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Function__DefaultHostKey=$FunctionKey
 az webapp config appsettings set -g $RGName -n $WebAppName --settings StorageAccount__StorageConnectionString=$ConnString
 az webapp config appsettings set -g $RGName -n $WebAppName --settings StorageAccount__TablePartitionKey=TODO
-az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__VaultUri=$KVUri
-az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__StorageAccountCredentials=$KVSecretUri
-az webapp config appsettings set -g $RGName -n $WebAppName --settings ApplicationInsights__InstrumentationKey=PLACEHOLDER
+az webapp config appsettings set -g $RGName -n $WebAppName --settings ApplicationInsights__InstrumentationKey=$InstrumentationKey
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__Instance=https://login.microsoftonline.com/
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__Domain=PLACEHOLDER
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientId=$ClientId
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__TenantId=$TenantId
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientSecret=$Secret
+#az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__VaultUri=$KVUri
+#az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__StorageAccountCredentials=$KVSecretUri
 
 #Set Function AppSettings
 az functionapp config appsettings set -n $FunctionName -g $RGName --settings "STORAGE_NAME=$DataStorename"
