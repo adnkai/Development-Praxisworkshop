@@ -101,6 +101,7 @@ jobs:
       - name: dotnet build and publish Function
         working-directory: ./Function
         run: |
+          dotnet clean
           dotnet restore
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_FUNCTION_PACKAGE_PATH }}/myfunc' 
