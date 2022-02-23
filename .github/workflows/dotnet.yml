@@ -3,16 +3,16 @@ name: .NET Core CI
 on: [push]
 
 env:
-  AZURE_WEBAPP_NAME: developmentworkshop
+  AZURE_WEBAPP_NAME: krworkshopapp
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   DOTNET_VERSION: '6.0.x'
-  AZURE_FUNCTION_NAME: wrkshpfunc
+  AZURE_FUNCTION_NAME: anygivennamekr
   AZURE_FUNCTION_PACKAGE_PATH: '.'
   DOTNET_VERSION_FUNCTION: '6.0.x'
 
 jobs:
   buildFrontend:
-    environment: DevWorkshop
+    environment: DevWorkshop2
     runs-on: windows-latest
 
     steps:
@@ -53,7 +53,7 @@ jobs:
   
   frontend:
     if: ${{ false }}
-    environment: DevWorkshop
+    environment: DevWorkshop2
     runs-on: ubuntu-latest
 
     steps:
@@ -84,7 +84,7 @@ jobs:
   
   
   function:
-    environment: DevWorkshop
+    environment: DevWorkshop2
     runs-on: ubuntu-latest
 
     steps:
@@ -121,3 +121,5 @@ jobs:
           app-name: ${{ env.AZURE_FUNCTION_NAME }} # Replace with your app name
           publish-profile: ${{ secrets.PUBLISH_PROFILE_FUNCTION  }} # Define secret variable in repository settings as per action documentation
           package: '${{ env.AZURE_FUNCTION_PACKAGE_PATH }}/Function/myfunc'
+
+
