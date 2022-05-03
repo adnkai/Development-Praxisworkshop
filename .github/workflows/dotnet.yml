@@ -62,7 +62,7 @@ jobs:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           # not yet supported by login@v1 action
           # for not this is still required, despite deprecated
-          # az ad sp create-for-rbac --sdk-auth 
+          # az ad sp create-for-rbac --sdk-auth
 
       - name: "Publish annotation"
         run: |
