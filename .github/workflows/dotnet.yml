@@ -53,22 +53,22 @@ jobs:
           
   annotations:
     environment: DevWorkshop
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: "Azure Login"
-        uses: Azure/login@v1.4.4
+        uses: azure/login@v1
         with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           # not yet supported by login@v1 action
           # for not this is still required, despite deprecated
-          # az ad sp create-for-rbac --sdk-auth 
-          # 
-          creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
-
-      - name: "Deploy App Service"
+          # az ad sp create-for-rbac --sdk-auth
+      - uses: actions/checkout@v2
+      - name: "Publish annotation"
+        shell: bash
         run: |
           branch=${GITHUB_HEAD_REF##*/}
-          ${{ env.OUTPUT_PATH }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
+          ./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend:
     if: ${{ false }}
