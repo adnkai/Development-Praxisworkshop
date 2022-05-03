@@ -1,10 +1,10 @@
 echo "Creating release annotation in Application Insights"
 
-APPINSIGHTS_ID=$(az resource show -g $1-rg -n $1-applicationinsights --resource-type "microsoft.insights/components" --query id -o tsv)
+APPINSIGHTS_ID=$( az resource show -g Developmentworkshop -n devworkshop --resource-type "microsoft.insights/components" --query id -o tsv)
 UUID=$(cat /proc/sys/kernel/random/uuid)
-releaseName=$2
-releaseDescription=$3
-triggerBy=$4
+releaseName='Frontend release'
+releaseDescription='Released frontend from Github Actions'
+triggerBy='Kai Roth'
 eventTime=`date '+%Y-%m-%dT%H:%M:%S' -u`
 category="Deployment"
 
