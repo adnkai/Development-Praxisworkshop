@@ -37,7 +37,7 @@ namespace Development_Praxisworkshop
             services.AddAuthorization(options => {
                 options.AddPolicy("ClaimsTest", policy => policy.RequireClaim("Contacts.Read"));
             });
-
+            
             // Enable Authentication globally
             services.AddControllersWithViews(options =>
                 {
@@ -51,8 +51,9 @@ namespace Development_Praxisworkshop
                 .AddMicrosoftIdentityUI();
 
             // Include Application Insights with config from appsettings.json
+            // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
             services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
-
+            
             // Configure SignOut redirect (doesn't work though...)
             services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
