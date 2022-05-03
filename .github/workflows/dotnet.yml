@@ -12,6 +12,7 @@ env:
 
 jobs:
   buildFrontend:
+    if: ${{ false }}
     environment: DevWorkshop
     runs-on: windows-latest
 
@@ -49,7 +50,25 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
-  
+          
+  annotations:
+    environment: DevWorkshop
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Azure Login"
+        uses: Azure/login@v1.4.4
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          # not yet supported by login@v1 action
+          # for not this is still required, despite deprecated
+          # az ad sp create-for-rbac --sdk-auth 
+          # 
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
+
+      - name: "Deploy App Service"
+        run: |
+          branch=${GITHUB_HEAD_REF##*/}
+          ${{ env.OUTPUT_PATH }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend:
     if: ${{ false }}
@@ -84,6 +103,7 @@ jobs:
   
   
   function:
+    if: ${{ false }}
     environment: DevWorkshop
     runs-on: ubuntu-latest
 
