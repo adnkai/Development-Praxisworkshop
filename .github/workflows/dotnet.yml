@@ -63,11 +63,11 @@ jobs:
           # not yet supported by login@v1 action
           # for not this is still required, despite deprecated
           # az ad sp create-for-rbac --sdk-auth
-
+      - uses: actions/checkout@v2
       - name: "Publish annotation"
         run: |
           branch=${GITHUB_HEAD_REF##*/}
-          ${{ env.GITHUB_WORKSPACE }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
+          ./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend:
     if: ${{ false }}
