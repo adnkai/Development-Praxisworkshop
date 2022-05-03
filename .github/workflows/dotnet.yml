@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           branch=${GITHUB_HEAD_REF##*/}
-          ${{ env.OUTPUT_PATH }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
+          ./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend:
     if: ${{ false }}
