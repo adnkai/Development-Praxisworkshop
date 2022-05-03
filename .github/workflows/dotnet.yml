@@ -53,7 +53,7 @@ jobs:
           
   annotations:
     environment: DevWorkshop
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: "Azure Login"
         uses: azure/login@v1
