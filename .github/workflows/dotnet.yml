@@ -67,7 +67,7 @@ jobs:
       - name: "Publish annotation"
         run: |
           branch=${GITHUB_HEAD_REF##*/}
-          ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
+          ${{ env.GITHUB_WORKSPACE }}/release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend:
     if: ${{ false }}
