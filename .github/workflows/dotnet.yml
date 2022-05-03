@@ -11,8 +11,8 @@ env:
   DOTNET_VERSION_FUNCTION: '6.0.x'
 
 jobs:
-  buildFrontend:
-    if: ${{ false }}
+  frontend:
+    #if: ${{ false }}
     environment: DevWorkshop
     runs-on: windows-latest
 
@@ -61,7 +61,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           # not yet supported by login@v1 action
-          # for not this is still required, despite deprecated
+          # for now this is still required, despite deprecated
           # az ad sp create-for-rbac --sdk-auth
       - uses: actions/checkout@v2
       - name: "Publish annotation"
@@ -70,7 +70,7 @@ jobs:
           branch=${GITHUB_HEAD_REF##*/}
           ./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
-  frontend:
+  frontend_v2:
     if: ${{ false }}
     environment: DevWorkshop
     runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
   
   
   function:
-    if: ${{ false }}
+    #if: ${{ false }}
     environment: DevWorkshop
     runs-on: ubuntu-latest
 
