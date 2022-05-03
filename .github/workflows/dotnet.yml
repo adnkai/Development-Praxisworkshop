@@ -54,7 +54,7 @@ jobs:
         uses: Azure/login@v1.4.4
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: ${{secrets.AZURE_CREDENTIALS}} # optional
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
           
       - name: "Deploy App Service"
         run: |
