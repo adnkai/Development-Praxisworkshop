@@ -53,7 +53,6 @@ namespace Development_Praxisworkshop
             // Include Application Insights with config from appsettings.json
             // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
             services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
-            
             // Configure SignOut redirect (doesn't work though...)
             services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
