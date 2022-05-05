@@ -30,7 +30,6 @@ namespace Development_Praxisworkshop.Helper
     public List<TodoModel> GetToDos()
     {
       _telemetryClient.TrackEvent("ListTodo");
-      _telemetryClient.TrackMetric("ListedTodo", 2);
       _telemetryClient.TrackTrace("TraceMessage GetToDos");
       return EnumerateDocumentsAsync(_table);
     }
@@ -38,7 +37,7 @@ namespace Development_Praxisworkshop.Helper
     public async Task<TodoModel> PostToDo(TodoModel _todo)
     {
       _telemetryClient.TrackEvent("CreateTodo");
-      _telemetryClient.TrackMetric("CreatedTodo", 1);
+      _telemetryClient.TrackMetric("CUSTOM_CreatedTodo_DescriptionLength", _todo.TaskDescription.Length);
       _telemetryClient.TrackTrace("TraceMessage CreateToDos");
       return await InsertItem(_todo);
     }
@@ -46,7 +45,6 @@ namespace Development_Praxisworkshop.Helper
     public async Task<TodoModel> MarkDoneToDo(string _rowKey)
     {
       _telemetryClient.TrackEvent("MarkDoneTodo");
-      _telemetryClient.TrackMetric("MarkedTodo", 5.3);
       return await UpdateToDo(_rowKey);
     }
     public async Task<TableResult> DeleteToDo(string _rowKey)
@@ -67,7 +65,7 @@ namespace Development_Praxisworkshop.Helper
         tmpTodos.Add(todo);
       }
       tmpTodos.Sort((x, y) => x.TaskDescription.CompareTo(y.TaskDescription));
-
+      _telemetryClient.TrackMetric("CUSTOM_ListTodo_Count", tmpTodos.Count);
       return tmpTodos;
     }
 
@@ -121,7 +119,7 @@ namespace Development_Praxisworkshop.Helper
         System.Console.WriteLine(e.StackTrace);
         throw;
       }
-
+      _telemetryClient.TrackMetric("CUSTOM_MarkedTodo_Value", updatedToDo.IsCompleted == false ? 0 : 1);
       return updatedToDo;
     }
 
