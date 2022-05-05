@@ -2,9 +2,9 @@ echo "Creating release annotation in Application Insights"
 
 APPINSIGHTS_ID=$( az resource show -g Developmentworkshop -n devworkshop --resource-type "microsoft.insights/components" --query id -o tsv)
 UUID=$(uuidgen)
-releaseName='$1'
-releaseDescription='$2'
-triggerBy='$3'
+releaseName=$1
+releaseDescription=$2
+triggerBy=$3
 eventTime=`date '+%Y-%m-%dT%H:%M:%S' -u`
 category="Deployment"
 
