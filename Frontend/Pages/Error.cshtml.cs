@@ -30,7 +30,7 @@ namespace Development_Praxisworkshop.Pages
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
             
-            throw new ArgumentNullException();
+            //throw new ArgumentNullException();
         }
     }
 }
