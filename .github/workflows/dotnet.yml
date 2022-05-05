@@ -67,9 +67,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Publish annotation"
         shell: bash
+        #./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
         run: |
           branch=${GITHUB_HEAD_REF##*/}
-          ./release-annotation.sh tst "Release for $branch" "Release for $branch and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
+          ./release-annotation.sh "Release for function" "Release for function and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
   
   frontend_v2:
     if: ${{ false }}
@@ -143,4 +144,23 @@ jobs:
           publish-profile: ${{ secrets.PUBLISH_PROFILE_FUNCTION  }} # Define secret variable in repository settings as per action documentation
           package: '${{ env.AZURE_FUNCTION_PACKAGE_PATH }}/Function/myfunc'
 
+  annotations_function:
+    needs: function
+    environment: DevWorkshop
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Azure Login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # optional
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          # not yet supported by login@v1 action
+          # for now this is still required, despite deprecated
+          # az ad sp create-for-rbac --sdk-auth
+      - uses: actions/checkout@v2
+      - name: "Publish annotation"
+        shell: bash
+        run: |
+          branch=${GITHUB_HEAD_REF##*/}
+          ./release-annotation.sh "Release for function" "Release for function and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
 
