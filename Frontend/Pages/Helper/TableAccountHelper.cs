@@ -30,23 +30,30 @@ namespace Development_Praxisworkshop.Helper
     public List<TodoModel> GetToDos()
     {
       _telemetryClient.TrackEvent("ListTodo");
+      _telemetryClient.TrackMetric("ListedTodo", 2);
+      _telemetryClient.TrackTrace("TraceMessage GetToDos");
       return EnumerateDocumentsAsync(_table);
     }
 
     public async Task<TodoModel> PostToDo(TodoModel _todo)
     {
       _telemetryClient.TrackEvent("CreateTodo");
+      _telemetryClient.TrackMetric("CreatedTodo", 1);
+      _telemetryClient.TrackTrace("TraceMessage CreateToDos");
       return await InsertItem(_todo);
     }
 
     public async Task<TodoModel> MarkDoneToDo(string _rowKey)
     {
       _telemetryClient.TrackEvent("MarkDoneTodo");
+      _telemetryClient.TrackMetric("MarkedTodo", 5.3);
       return await UpdateToDo(_rowKey);
     }
     public async Task<TableResult> DeleteToDo(string _rowKey)
     {
       _telemetryClient.TrackEvent("DeleteTodo");
+      _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
+      _telemetryClient.TrackException(new OverflowException());
       return await DelToDo(_rowKey);
     }
 
