@@ -163,4 +163,3 @@ jobs:
         run: |
           branch=${GITHUB_HEAD_REF##*/}
           ./release-annotation.sh "Release for function" "Release for function and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}"
-
