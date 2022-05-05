@@ -54,7 +54,7 @@ jobs:
   annotations:
     needs: frontend
     environment: DevWorkshop
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: "Azure Login"
         uses: azure/login@v1
