@@ -52,7 +52,7 @@ jobs:
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/myapp/app.zip
           
   annotations:
-    if: ${{ false }}
+    #if: ${{ false }}
     needs: frontend
     environment: DevWorkshop
     runs-on: ubuntu-latest
