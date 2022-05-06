@@ -36,6 +36,7 @@ namespace Development_Praxisworkshop
             // Role Based Claims
             services.AddAuthorization(options => {
                 options.AddPolicy("ClaimsTest", policy => policy.RequireClaim("Contacts.Read"));
+                //options.AddPolicy("Roles", policy => policy.RequireClaim("Roles"));
             });
             
             // Enable Authentication globally

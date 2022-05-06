@@ -26,15 +26,18 @@
     </tr>
 
     @{
-        var roles = @User.Claims?.FirstOrDefault(x => x.Type.Equals("Role", StringComparison.OrdinalIgnoreCase))?.Value;
+        var roles = @User.Claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Role))?.Value;
+        Html.DisplayName("Profile " + roles);
     }
 
-    <div class="col-md-9 text-center " id="logoutForm">
-
-    @foreach(var item in roles)
-    {
-        Html.DisplayName("Profile " + item);
+    @foreach (var claim in User.Claims){
+        <tr>
+            <td>@claim.Type</td>
+            <td>@claim.Value</td>
+            
+        </tr>
     }
+
 
 </table>
 }

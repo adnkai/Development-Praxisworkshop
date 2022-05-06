@@ -21,7 +21,7 @@ namespace Development_Praxisworkshop.Pages
         }
         public void OnGet()
         {
-
+            
         }
     }
 }
