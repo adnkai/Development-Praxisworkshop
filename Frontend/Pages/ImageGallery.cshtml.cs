@@ -13,7 +13,7 @@ using Development_Praxisworkshop.Helper;
 namespace Development_Praxisworkshop.Pages
 {
     //[AllowAnonymous]
-    [Authorize]
+    [Authorize(Roles = ("168a64b4-8455-4211-b483-42eea5f9069b"))] // DevOps Group
     public class GalleryModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
