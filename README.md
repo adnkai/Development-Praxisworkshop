@@ -88,3 +88,7 @@ Mit folgenden Tools werden wir im Workshop arbeiten:
   - https://code.visualstudio.com/Download
 - Git
   - https://git-scm.com/downloads
+
+### Github Actions
+# Flag file as executable
+git update-index --chmod=+x script.sh
