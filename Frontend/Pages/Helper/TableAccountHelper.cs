@@ -78,10 +78,11 @@ namespace Development_Praxisworkshop.Helper
 
       TableResult result;
       TableOperation operation = TableOperation.InsertOrReplace(_todoItem);
-
+      
       try
       {
         result = await _table.ExecuteAsync(operation);
+        _telemetryClient.TrackEvent("InsertItem");
       }
       catch (System.Exception e)
       {
