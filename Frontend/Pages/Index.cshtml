@@ -1,5 +1,7 @@
 ﻿@page
 @model IndexModel
+@using System.Security.Claims
+
 @{
     ViewData["Title"] = "Home";
 }
@@ -19,6 +21,20 @@
     <tr>
         <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value</td>
     </tr>
-   
+    <tr>
+        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Role", StringComparison.OrdinalIgnoreCase))?.Value</td>
+    </tr>
+
+    @{
+        var roles = @User.Claims?.FirstOrDefault(x => x.Type.Equals("Role", StringComparison.OrdinalIgnoreCase))?.Value;
+    }
+
+    <div class="col-md-9 text-center " id="logoutForm">
+
+    @foreach(var item in roles)
+    {
+        Html.DisplayName("Profile " + item);
+    }
+
 </table>
 }
