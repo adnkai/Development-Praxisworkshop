@@ -31,11 +31,13 @@ namespace Development_Praxisworkshop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")); // Fetch Auth Data from appsettings.json
-            
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
+                .EnableTokenAcquisitionToCallDownstreamApi(new string[] {})
+                .AddInMemoryTokenCaches();
             // Role Based Claims
             services.AddAuthorization(options => {
                 options.AddPolicy("ClaimsTest", policy => policy.RequireClaim("Contacts.Read"));
+                options.AddPolicy("MustHaveOneDrive", policy => policy.RequireClaim("Files.ReadWrite"));
                 //options.AddPolicy("Roles", policy => policy.RequireClaim("Roles"));
             });
             
