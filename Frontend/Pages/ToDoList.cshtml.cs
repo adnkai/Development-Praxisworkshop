@@ -21,9 +21,9 @@ public class ToDoListModel : PageModel
   }
   public async Task<IActionResult> OnGetAsync()
   {
-
-    todos = todo.GetToDos();
-
+    await Task.Run(() => {
+      todos = todo.GetToDos();
+    });
     return Page();
   }
 

@@ -49,7 +49,9 @@ public class Startup
         {
             options.Events.OnRemoteSignOut = async context =>
             {
-                context.Response.Redirect("/");
+                await Task.Run(() => {
+                    context.Response.Redirect("/");
+                });
             };
         });
     }
