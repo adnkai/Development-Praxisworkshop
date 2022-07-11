@@ -1,6 +1,4 @@
-﻿@using System.Security.Principal
-
-@{
+﻿@{
     ViewData["Name"] = @User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value;
 }
 
