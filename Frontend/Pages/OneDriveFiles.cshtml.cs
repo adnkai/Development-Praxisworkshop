@@ -25,7 +25,7 @@ public class OneDriveFilesModel : PageModel
         _tokenAcquisition = tokenAcquisition;
         _graphServiceClient = graphServiceClient;
         this._consentHandler = consentHandler;
-        _graphScopes = new[] {"files.readwrite", "Sites.Read.All"};
+        _graphScopes = new[] {"files.readwrite", "Sites.Read.All"}; // required for Onedrive Items/Folders
     }
 
     public void OnGet()
@@ -34,8 +34,8 @@ public class OneDriveFilesModel : PageModel
         //string[] scopes = new string[]{"Contacts.Read","Family.Read"}; // Inkrementelle Anforderung automatisch durch bekanntgabe gaaaanz oben
         string[] scopes = new string[]{"files.readwrite", "Sites.Read.All"}; // Inkrementelle Anforderung automatisch durch bekanntgabe gaaaanz oben
         _accessToken = _tokenAcquisition.GetAccessTokenForUserAsync(scopes).Result;
-        
-        _files = _graphServiceClient.Drive.Root.Children.Request().GetAsync().Result;
+        Console.WriteLine(_accessToken);
+        _files = _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync().Result;
 
     }
 

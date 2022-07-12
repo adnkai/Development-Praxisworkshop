@@ -92,6 +92,10 @@ az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentica
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientId=$ClientId
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__TenantId=$TenantId
 az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientSecret=$Secret
+az webapp config appsettings set -g $RGName -n $WebAppName --settings Authentication__ClientCapabilities=[ "cp1" ]
+az webapp config appsettings set -g $RGName -n $WebAppName --settings DownstreamApi__Scopes=user.read
+az webapp config appsettings set -g $RGName -n $WebAppName --settings DownstreamApi__BaseUrl=https://graph.microsoft.com/v1.0
+
 #az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__VaultUri=$KVUri
 #az webapp config appsettings set -g $RGName -n $WebAppName --settings KeyVault__StorageAccountCredentials=$KVSecretUri
 
