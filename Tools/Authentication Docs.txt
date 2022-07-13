@@ -1,0 +1,30 @@
+SAML
+https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/auth-saml
+
+Conditional Access
+https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-conditional-access-dev-guide
+
+App Registration oder Enterprise Application
+https://xkln.net/blog/understanding-azure-app-registration-enterprise-apps-and-service-principals/
+
+Azure Authentication Endpoint = Customer Domain Name
+https://docs.microsoft.com/en-us/azure/active-directory/develop/authentication-national-cloud#azure-ad-authentication-endpoints
+
+Open ID Configuration Metadata
+https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
+
+Scopes, Permissions & Consent
+https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
+
+Request and cache tokens
+https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-acquire-cache-tokens
+
+MSAL Authorities
+https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration#authority
+
+MSAL B2C generic authorities
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-generic-openid-connect?pivots=b2c-user-flow
+
+Username & Password
+https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
+
