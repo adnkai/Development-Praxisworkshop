@@ -11,6 +11,7 @@ public class GalleryModel : PageModel
     {
         _logger = logger;
         _config = config;
+        images = new List<String>();
     }
     public void OnGet()
     {

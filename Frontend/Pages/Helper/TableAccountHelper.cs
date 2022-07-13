@@ -117,16 +117,20 @@ public class TableAccountHelper
 
   private async Task<TableResult> DelToDo(string _rowKey)
   {
+    TableResult result;
     try
     {
       TableOperation operation = TableOperation.Delete(new TodoModel(_rowKey, "TODO"));
-      return await _table.ExecuteAsync(operation);
-      
+      result = await _table.ExecuteAsync(operation);
+      return result;
+
     }
     catch (System.Exception e)
     {
       System.Console.WriteLine(e.StackTrace);
     }
-    return null;
+    result = new TableResult();
+    result.HttpStatusCode = 422;
+    return result;
   }
 }

@@ -15,12 +15,13 @@ public class ToDoListFunctionModel : PageModel
     _telemetryClient = telemetryClient;
     _logger = logger;
     _config = config;
+    todos = new List<TodoModel>();
     todo = new FunctionHelper(_config, _telemetryClient);
   }
 
   public async Task<IActionResult> OnGetAsync()
   {
-    todos = await todo.GetToDos();
+    todos = await todo!.GetToDos();
 
     return Page();
   }
@@ -32,21 +33,21 @@ public class ToDoListFunctionModel : PageModel
       return RedirectToPage("/ToDoListFunction");
     }
 
-    await todo.PostToDo(todoTask);
+    await todo!.PostToDo(todoTask);
 
     return RedirectToPage("/ToDoListFunction");
   }
 
   public async Task<IActionResult> OnPostMarkDoneAsync(string id)
   {
-    await todo.MarkDoneToDo(id);
+    await todo!.MarkDoneToDo(id);
 
     return RedirectToPage("/ToDoListFunction");
   }
 
   public async Task<IActionResult> OnPostDeleteToDoAsync(string deleteId)
   {
-    await todo.DeleteToDo(deleteId);
+    await todo!.DeleteToDo(deleteId);
 
     return RedirectToPage("/ToDoListFunction");
   }

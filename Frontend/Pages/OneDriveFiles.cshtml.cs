@@ -6,7 +6,6 @@ public class OneDriveFilesModel : PageModel
 {
     private readonly ILogger<PrivacyModel> _logger;
     private readonly IConfiguration _config;
-    public IDriveItemsCollectionPage files;
     readonly ITokenAcquisition _tokenAcquisition;
     private string _accessToken;
     private readonly GraphServiceClient _graphServiceClient;
@@ -25,6 +24,7 @@ public class OneDriveFilesModel : PageModel
         _tokenAcquisition = tokenAcquisition;
         _graphServiceClient = graphServiceClient;
         this._consentHandler = consentHandler;
+        _accessToken = "";
         _graphScopes = new[] {"files.readwrite", "Sites.Read.All"}; // required for Onedrive Items/Folders
     }
 

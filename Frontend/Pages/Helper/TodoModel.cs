@@ -19,6 +19,7 @@ public class TodoModel : TableEntity
     PartitionKey = "TODO";
     RowKey = new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
     ETag = "*";
+    TaskDescription = "";
   }
 
   public TodoModel(string _rowKey, string _partititonKey)
@@ -26,5 +27,6 @@ public class TodoModel : TableEntity
     PartitionKey = _partititonKey ?? "TODO";
     RowKey = _rowKey ?? new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
     ETag = "*";
+    TaskDescription = "";
   }
 }

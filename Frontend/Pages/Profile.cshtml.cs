@@ -18,7 +18,7 @@ public class ProfileModel : PageModel
         _logger = logger;
         _graphServiceClient = graphServiceClient;
         this._consentHandler = consentHandler;
-        _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
+        _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ')!;
     }
 
     public void OnGet()

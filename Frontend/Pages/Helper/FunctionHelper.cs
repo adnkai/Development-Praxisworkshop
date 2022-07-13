@@ -55,11 +55,11 @@ public class FunctionHelper
       }
 
       var data = await response.Content.ReadAsStringAsync();
-      tmpTodos = JsonConvert.DeserializeObject<List<TodoModel>>(data);
+      tmpTodos = JsonConvert.DeserializeObject<List<TodoModel>>(data)!;
     }
     catch { }
 
-    return tmpTodos;
+    return tmpTodos!;
   }
 
   private async Task<string> InsertItem(string _todoTask)
@@ -81,10 +81,10 @@ public class FunctionHelper
 
     if (!response.IsSuccessStatusCode)
     {
-      System.Console.WriteLine("Unnssuccessffull");
+      System.Console.WriteLine("Unnssuccessfull");
       System.Console.WriteLine(response.StatusCode);
 
-      return await Task.FromResult<string>(null);
+      return await Task.FromResult<string>("Unnssuccessfull");
     }
 
     return await response.Content.ReadAsStringAsync();
@@ -101,13 +101,13 @@ public class FunctionHelper
 
     if(!tData.IsSuccessStatusCode)
     {
-      System.Console.WriteLine("Unnssuccessffull");
+      System.Console.WriteLine("Unssuccessfull");
       System.Console.WriteLine(tData.StatusCode);
 
-      return await Task.FromResult<string>(null);
+      return await Task.FromResult<string>("Unssuccessfull");
     }
     
-    TodoModel toUpdate = JsonConvert.DeserializeObject<TodoModel>(await tData.Content.ReadAsStringAsync());
+    TodoModel toUpdate = JsonConvert.DeserializeObject<TodoModel>(await tData.Content.ReadAsStringAsync())!;
     toUpdate.IsCompleted = toUpdate.IsCompleted ? false : true;
 
     var content = new StringContent(JsonConvert.SerializeObject(toUpdate));
@@ -116,10 +116,10 @@ public class FunctionHelper
 
     if (!response.IsSuccessStatusCode)
     {
-      System.Console.WriteLine("Unnssuccessffull");
+      System.Console.WriteLine("Unssuccessfull");
       System.Console.WriteLine(response.StatusCode);
 
-      return await Task.FromResult<string>(null);
+      return await Task.FromResult<string>("Unssuccessfull");
     }
 
     return await response.Content.ReadAsStringAsync();
@@ -144,10 +144,10 @@ public class FunctionHelper
 
     if (!response.IsSuccessStatusCode)
     {
-      System.Console.WriteLine("Unnssuccessffull");
+      System.Console.WriteLine("Unssuccessfull");
       System.Console.WriteLine(response.StatusCode);
 
-      return await Task.FromResult<string>(null);
+      return await Task.FromResult<string>("Unssuccessfull");
     }
 
     return await response.Content.ReadAsStringAsync();
