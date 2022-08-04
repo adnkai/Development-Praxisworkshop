@@ -4,27 +4,42 @@ public class TableAccountHelper
 {
   private TableServiceClient _tableServiceClient;
   private TableClient _tableClient;
+  private TableClient _coreTableClient;
   readonly TelemetryClient _telemetryClient;
 
-  private string _tableName = "TODO";
+  private string _coreTableName = "TablesTable";
 
   public TableAccountHelper(IConfiguration config, TelemetryClient telemetry)
   {
     _telemetryClient = telemetry;
-
-    // CloudStorageAccount _acc = CloudStorageAccount.Parse(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
-    // _tableClient = _acc.CreateCloudTableClient();
-
     _tableServiceClient = new TableServiceClient(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
-    //GetTableReference(config.GetSection("StorageAccount").GetValue<string>("TablePartitionKey"));
-    _tableServiceClient.CreateTableIfNotExistsAsync(_tableName).GetAwaiter().GetResult();
-    
-    _tableClient = _tableServiceClient.GetTableClient(_tableName);
+    _tableServiceClient.CreateTableIfNotExistsAsync(_coreTableName).GetAwaiter().GetResult();
+    _coreTableClient = _tableServiceClient.GetTableClient(_coreTableName);
 
+    // var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq 'Kai.Roth@adn.de'");
+    // _tableClient = _tableServiceClient.GetTableClient(tables.First<TablesTableModel>().RowKey);
   }
+
+  public List<TablesTableModel> GetToDoLists()
+  {
+    _telemetryClient.TrackEvent("ListTodoLists");
+    _telemetryClient.TrackTrace("TraceMessage GetToDoLists");
+    return _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq 'Kai.Roth@adn.de'").ToList<TablesTableModel>();
+  }
+
 
   public List<TodoModel> GetToDos()
   {
+    if (_tableClient == null) {
+      
+      var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq 'Kai.Roth@adn.de'");
+      foreach (TablesTableModel m in tables) {
+        Console.WriteLine(m.RowKey);
+      }
+      _tableClient = _tableServiceClient.GetTableClient(tables.First<TablesTableModel>().RowKey);
+      
+      return EnumerateDocumentsAsync(_tableClient);
+    }
     _telemetryClient.TrackEvent("ListTodo");
     _telemetryClient.TrackTrace("TraceMessage GetToDos");
     return EnumerateDocumentsAsync(_tableClient);
@@ -36,6 +51,14 @@ public class TableAccountHelper
     _telemetryClient.TrackMetric("CUSTOM_CreatedTodo_DescriptionLength", _todo.TaskDescription.Length);
     _telemetryClient.TrackTrace("TraceMessage CreateToDos");
     return await InsertItem(_todo);
+  }
+
+   public async Task<Azure.Response> PostCreateToDoList(String _listName, String upn)
+  {
+    Console.WriteLine(_listName);
+    _telemetryClient.TrackEvent("CreateTodoList");
+    _telemetryClient.TrackTrace("TraceMessage CreateToDoList");
+    return await CreateToDoList(_listName, upn);
   }
 
   public async Task<TodoModel> MarkDoneToDo(string _rowKey)
@@ -55,11 +78,6 @@ public class TableAccountHelper
   private List<TodoModel> EnumerateDocumentsAsync(TableClient _tableClient)
   {
     List<TodoModel> tmpTodos = new List<TodoModel>();
-
-    // _tableClient.Query<TodoModel>();
-
-    //TableQuery<TodoModel> query = new TableQuery<TodoModel>();
-
     foreach (TodoModel todo in _tableClient.Query<TodoModel>())
     {
       tmpTodos.Add(todo);
@@ -80,9 +98,7 @@ public class TableAccountHelper
     {
       Azure.Response result;
       result = await _tableClient.AddEntityAsync<TodoModel>(_todoItem);
-      // result = await _table.ExecuteAsync(operation);
       _telemetryClient.TrackEvent($"InsertItem - {result}");
-      // GET THIS ITEM FRESH
       return _todoItem;
       
     }
@@ -141,14 +157,17 @@ public class TableAccountHelper
     return result;
   }
 
-  private async Task<TableClient> CreateToDoList(string _listName)
+  private async Task<Azure.Response> CreateToDoList(string _listName, string upn)
   {
-    TableClient result;
+    Azure.Response result;
     try
     {
-      await _tableServiceClient.CreateTableIfNotExistsAsync(_tableName);
-      result = _tableServiceClient.GetTableClient(_tableName);
-      
+      await _tableServiceClient.CreateTableIfNotExistsAsync(_listName);
+      _tableClient = _tableServiceClient.GetTableClient(_listName);
+
+      var model = new TablesTableModel(_listName, upn);
+      result = await _coreTableClient.AddEntityAsync<TablesTableModel>(model);
+
       return result;
     }
     catch (System.Exception e)

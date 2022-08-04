@@ -5,6 +5,23 @@
 }
 <h1>@ViewData["Title"]</h1>
 
+
+<select name="TodoLists" id="todoLists" onchange="GetToDos()">
+    @foreach (var item in Model.todoLists)
+    {
+        <option value=@item.RowKey>@item.RowKey</option>
+    }
+</select>
+
+<form  method="post" class="mb-3">
+  <div class="mb-3">
+    <label for="todolistname" class="form-label">ToDo List Name</label>
+    <input type="text" class="form-control" id="todolistname" aria-describedby="todolistHelp" name="todolistname">
+    <div id="todoHelp" class="form-text">What do you want to do?</div>
+  </div>
+  <button type="submit" class="btn btn-primary" asp-page-handler="CreateToDoList">Submit</button>
+</form>
+
 <form  method="post" class="mb-3">
   <div class="mb-3">
     <label for="todotask" class="form-label">Task Description</label>
@@ -13,6 +30,7 @@
   </div>
   <button type="submit" class="btn btn-primary" asp-page-handler="Insert">Submit</button>
 </form>
+
 
 <table class="table table-striped">
     <thead>
