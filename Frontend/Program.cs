@@ -35,6 +35,8 @@ builder.Services.AddRazorPages()
 builder.Services.AddServerSideBlazor()
     .AddMicrosoftIdentityConsentHandler();
 
+builder.Services.AddSingleton<IUserDataSingleton, UserDataSingleton>();
+
 // Include Application Insights with config from appsettings.json
 // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
 builder.Services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
