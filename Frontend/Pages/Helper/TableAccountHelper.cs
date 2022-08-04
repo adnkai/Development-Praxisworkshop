@@ -2,27 +2,32 @@ namespace Development_Praxisworkshop.Helper;
 
 public class TableAccountHelper
 {
-  private CloudTableClient _tableClient;
-  private CloudTable _table;
+  private TableServiceClient _tableServiceClient;
+  private TableClient _tableClient;
   readonly TelemetryClient _telemetryClient;
+
+  private string _tableName = "TODO";
 
   public TableAccountHelper(IConfiguration config, TelemetryClient telemetry)
   {
     _telemetryClient = telemetry;
 
-    CloudStorageAccount _acc = CloudStorageAccount.Parse(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
-    _tableClient = _acc.CreateCloudTableClient();
+    // CloudStorageAccount _acc = CloudStorageAccount.Parse(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
+    // _tableClient = _acc.CreateCloudTableClient();
 
-    CloudTable table = _tableClient.GetTableReference(config.GetSection("StorageAccount").GetValue<string>("TablePartitionKey"));
-    table.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-    _table = table;
+    _tableServiceClient = new TableServiceClient(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
+    //GetTableReference(config.GetSection("StorageAccount").GetValue<string>("TablePartitionKey"));
+    _tableServiceClient.CreateTableIfNotExistsAsync(_tableName).GetAwaiter().GetResult();
+    
+    _tableClient = _tableServiceClient.GetTableClient(_tableName);
+
   }
 
   public List<TodoModel> GetToDos()
   {
     _telemetryClient.TrackEvent("ListTodo");
     _telemetryClient.TrackTrace("TraceMessage GetToDos");
-    return EnumerateDocumentsAsync(_table);
+    return EnumerateDocumentsAsync(_tableClient);
   }
 
   public async Task<TodoModel> PostToDo(TodoModel _todo)
@@ -38,7 +43,8 @@ public class TableAccountHelper
     _telemetryClient.TrackEvent("MarkDoneTodo");
     return await UpdateToDo(_rowKey);
   }
-  public async Task<TableResult> DeleteToDo(string _rowKey)
+
+  public async Task<Azure.Response> DeleteToDo(string _rowKey)
   {
     _telemetryClient.TrackEvent("DeleteTodo");
     _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
@@ -46,12 +52,15 @@ public class TableAccountHelper
     return await DelToDo(_rowKey);
   }
 
-  private List<TodoModel> EnumerateDocumentsAsync(CloudTable _table)
+  private List<TodoModel> EnumerateDocumentsAsync(TableClient _tableClient)
   {
     List<TodoModel> tmpTodos = new List<TodoModel>();
-    TableQuery<TodoModel> query = new TableQuery<TodoModel>();
 
-    foreach (TodoModel todo in _table.ExecuteQuery(query))
+    // _tableClient.Query<TodoModel>();
+
+    //TableQuery<TodoModel> query = new TableQuery<TodoModel>();
+
+    foreach (TodoModel todo in _tableClient.Query<TodoModel>())
     {
       tmpTodos.Add(todo);
     }
@@ -67,70 +76,85 @@ public class TableAccountHelper
       throw new NullReferenceException();
     }
 
-    TableResult result;
-    TableOperation operation = TableOperation.InsertOrReplace(_todoItem);
-    
     try
     {
-      result = await _table.ExecuteAsync(operation);
-      _telemetryClient.TrackEvent("InsertItem");
+      Azure.Response result;
+      result = await _tableClient.AddEntityAsync<TodoModel>(_todoItem);
+      // result = await _table.ExecuteAsync(operation);
+      _telemetryClient.TrackEvent($"InsertItem - {result}");
+      // GET THIS ITEM FRESH
+      return _todoItem;
+      
     }
     catch (System.Exception e)
     {
       System.Console.WriteLine(e.StackTrace);
       throw;
     }
-
-    TodoModel newTodo = (TodoModel)result.Result;
-
-    return newTodo;
+    
   }
 
   private async Task<TodoModel> UpdateToDo(string _rowKey)
   {
-    TableResult result;
-    TableOperation operation = TableOperation.Retrieve<TodoModel>("TODO", _rowKey);
-    TodoModel updatedToDo;
+    
+    Pageable<TodoModel> queryResultsFilter = _tableClient.Query<TodoModel>(filter: $"RowKey eq '{_rowKey}'");
 
+    Console.WriteLine($"The query returned {queryResultsFilter.Count()} entities.");
+
+    // TodoModel updatedToDo;
+    Azure.Response response;
+    TodoModel m;
     try
     {
-      result = await _table.ExecuteAsync(operation);
+      TodoModel item = queryResultsFilter.First();
 
-      if (result.Result == null)
+      if (item == null)
       {
         throw new NullReferenceException();
       }
 
-      TodoModel m = (TodoModel)result.Result;
+      m = item;
       m.IsCompleted = m.IsCompleted ? false : true;
-
-      updatedToDo = await InsertItem(m);
+      response = await _tableClient.UpdateEntityAsync<TodoModel>(m, ETag.All, TableUpdateMode.Merge);
     }
     catch (System.Exception e)
     {
       System.Console.WriteLine(e.StackTrace);
       throw;
     }
-    _telemetryClient.TrackMetric("CUSTOM_MarkedTodo_Value", updatedToDo.IsCompleted == false ? 0 : 1);
-    return updatedToDo;
+    _telemetryClient.TrackMetric("CUSTOM_MarkedTodo_Value", m.IsCompleted == false ? 0 : 1);
+    return m;
   }
 
-  private async Task<TableResult> DelToDo(string _rowKey)
+  private async Task<Azure.Response> DelToDo(string _rowKey)
   {
-    TableResult result;
+    Azure.Response result;
     try
     {
-      TableOperation operation = TableOperation.Delete(new TodoModel(_rowKey, "TODO"));
-      result = await _table.ExecuteAsync(operation);
-      return result;
-
+      result = await _tableClient.DeleteEntityAsync("TODO", _rowKey);
     }
     catch (System.Exception e)
     {
       System.Console.WriteLine(e.StackTrace);
+      throw;
     }
-    result = new TableResult();
-    result.HttpStatusCode = 422;
     return result;
+  }
+
+  private async Task<TableClient> CreateToDoList(string _listName)
+  {
+    TableClient result;
+    try
+    {
+      await _tableServiceClient.CreateTableIfNotExistsAsync(_tableName);
+      result = _tableServiceClient.GetTableClient(_tableName);
+      
+      return result;
+    }
+    catch (System.Exception e)
+    {
+      System.Console.WriteLine(e.StackTrace);
+      throw;
+    }
   }
 }

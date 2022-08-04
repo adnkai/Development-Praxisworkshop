@@ -1,8 +1,8 @@
 namespace Development_Praxisworkshop.Pages;
 
-//[AllowAnonymous]
+[AllowAnonymous]
 //[Authorize(Policy = "ClaimsTest")]
-[Authorize]
+// [Authorize]
 
 public class ToDoListModel : PageModel
 {

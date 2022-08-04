@@ -46,7 +46,7 @@ global using Azure.Storage.Blobs;
 global using Azure.Storage.Blobs.Models;
 
 // Storage - Tables | Deprecated but works
-global using Microsoft.Azure.Cosmos.Table;
+global using Azure.Data.Tables;
 
 // Diagnostics
 global using System.Diagnostics;
