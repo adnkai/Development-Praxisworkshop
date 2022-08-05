@@ -1,6 +1,6 @@
 namespace Development_Praxisworkshop.Helper;
 
-public class TableAccountHelper : PageModel
+public class TableAccountHelper
 {
   private TableServiceClient _tableServiceClient;
   private TableClient _coreTableClient;
