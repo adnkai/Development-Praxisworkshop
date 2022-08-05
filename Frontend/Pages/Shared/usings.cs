@@ -7,7 +7,7 @@ global using System.Threading.Tasks;
 global using System.Collections.Generic;
 global using System.Net.Http;
 global using System.Net.Http.Headers;
-
+global using System.Web;
 // Dependencies
 global using Newtonsoft.Json;
 global using Development_Praxisworkshop.Helper;

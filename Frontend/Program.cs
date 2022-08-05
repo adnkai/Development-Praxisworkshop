@@ -18,7 +18,7 @@ builder.Services.AddAuthorization(options => {
     options.AddPolicy("MustHaveOneDrive", policy => policy.RequireClaim("Files.ReadWrite"));
     //options.AddPolicy("Roles", policy => policy.RequireClaim("Roles"));
 });
-        
+
         // Enable Authentication globally
 builder.Services.AddControllersWithViews(options =>
     {
@@ -35,8 +35,9 @@ builder.Services.AddRazorPages()
 builder.Services.AddServerSideBlazor()
     .AddMicrosoftIdentityConsentHandler();
 
-builder.Services.AddSingleton<IUserDataSingleton, UserDataSingleton>();
+builder.Services.AddSingleton<IDataSingleton, DataSingleton>();
 
+builder.Services.AddHttpContextAccessor();
 // Include Application Insights with config from appsettings.json
 // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
 builder.Services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));

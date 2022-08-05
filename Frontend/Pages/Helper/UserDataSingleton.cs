@@ -1,12 +1,12 @@
-public interface IUserDataSingleton
+public interface IDataSingleton
 {
     String upn {get; set;}
     TableClient tableClient {get; set;}
 }
 
-public class UserDataSingleton : IUserDataSingleton
+public class DataSingleton : IDataSingleton
 {
-    public UserDataSingleton(){}
+    public DataSingleton(){}
 
     public String upn {get; set;}
     public TableClient tableClient {get; set;}
