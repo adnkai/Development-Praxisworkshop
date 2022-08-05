@@ -19,6 +19,9 @@ public class TableAccountHelper
     _coreTableClient = _tableServiceClient.GetTableClient(_coreTableName);
     _user = user;
     _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
+    
+    var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    _tableClient = _tableServiceClient.GetTableClient(tables.First<TablesTableModel>().RowKey);
   }
 
   public List<TablesTableModel> GetToDoLists()
@@ -33,7 +36,6 @@ public class TableAccountHelper
   public List<TodoModel> GetToDos()
   {
     if (_tableClient == null) {
-      //var upn = User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
       var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
       foreach (TablesTableModel m in tables) {
         Console.WriteLine(m.RowKey);
