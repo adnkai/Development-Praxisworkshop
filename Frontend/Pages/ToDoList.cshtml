@@ -5,13 +5,18 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-
-<select name="TodoLists" id="todoLists" onchange="GetToDos()">
-    @foreach (var item in Model.todoLists)
-    {
-        <option value=@item.RowKey>@item.RowKey</option>
+<form  method="post" class="mb-3">
+    <select name="TodoLists" id="todoList">
+        @foreach (var item in Model.todoLists)
+        {
+            <option value=@item.RowKey>@item.RowKey</option>
+        }
+    </select>
+    @if (Model.todoLists.Count > 1) {
+        <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Submit</button>        
     }
-</select>
+</form>
+
 
 <form  method="post" class="mb-3">
   <div class="mb-3">

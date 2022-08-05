@@ -8,6 +8,7 @@ public class TableAccountHelper
   readonly TelemetryClient _telemetryClient;
   private ClaimsPrincipal _user;
   private String _upn;
+  private Pageable<TablesTableModel> _tables;
 
   private string _coreTableName = "TablesTable";
 
@@ -20,8 +21,12 @@ public class TableAccountHelper
     _user = user;
     _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
     
-    var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
-    _tableClient = _tableServiceClient.GetTableClient(tables.First<TablesTableModel>().RowKey);
+    _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    if (_tables.Count() < 1) {
+      _ = CreateToDoList("Default", _upn).Result;
+      _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    }
+    _tableClient = _tableServiceClient.GetTableClient(_tables.First<TablesTableModel>().RowKey);
   }
 
   public List<TablesTableModel> GetToDoLists()
@@ -36,17 +41,11 @@ public class TableAccountHelper
   public List<TodoModel> GetToDos()
   {
     if (_tableClient == null) {
-      var tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
-      foreach (TablesTableModel m in tables) {
-        Console.WriteLine(m.RowKey);
-      }
-      _tableClient = _tableServiceClient.GetTableClient(tables.First<TablesTableModel>().RowKey);
-      _telemetryClient.TrackEvent("ListTodo");
-      _telemetryClient.TrackTrace("TraceMessage GetToDos");
-      return EnumerateDocumentsAsync(_tableClient);
+      return new List<TodoModel>();
     }
     _telemetryClient.TrackEvent("ListTodo");
     _telemetryClient.TrackTrace("TraceMessage GetToDos");
+
     return EnumerateDocumentsAsync(_tableClient);
   }
 
@@ -60,10 +59,15 @@ public class TableAccountHelper
 
    public async Task<Azure.Response> PostCreateToDoList(String _listName)
   {
-    Console.WriteLine(_listName);
     _telemetryClient.TrackEvent("CreateTodoList");
     _telemetryClient.TrackTrace("TraceMessage CreateToDoList");
     return await CreateToDoList(_listName, _upn);
+  }
+
+  public async Task<Azure.Response> PostDeleteToDoList(String _listName)
+  {
+    _telemetryClient.TrackEvent("DeleteTodoList");
+    return await DeleteToDoList(_listName, _upn);
   }
 
   public async Task<TodoModel> MarkDoneToDo(string _rowKey)
@@ -173,6 +177,21 @@ public class TableAccountHelper
       var model = new TablesTableModel(_listName, upn);
       result = await _coreTableClient.AddEntityAsync<TablesTableModel>(model);
 
+      return result;
+    }
+    catch (System.Exception e)
+    {
+      System.Console.WriteLine(e.StackTrace);
+      throw;
+    }
+  }
+
+  private async Task<Azure.Response> DeleteToDoList(string _listName, string upn)
+  {
+    Azure.Response result;
+    try
+    {
+      result = await _tableServiceClient.DeleteTableAsync(_listName);
       return result;
     }
     catch (System.Exception e)
