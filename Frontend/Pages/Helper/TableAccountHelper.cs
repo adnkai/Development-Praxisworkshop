@@ -10,6 +10,9 @@ public class TableAccountHelper
   private String _upn;
   private Pageable<TablesTableModel> _tables;
 
+  public Dictionary<String, List<TodoModel>> _todos;
+
+
   private string _coreTableName = "TablesTable";
 
   public TableAccountHelper(IConfiguration config, TelemetryClient telemetry, ClaimsPrincipal user)
@@ -21,11 +24,17 @@ public class TableAccountHelper
     _user = user;
     _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
     
+
     _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    _todos = new Dictionary<string, List<TodoModel>>();
+
     if (_tables.Count() < 1) {
       _ = CreateToDoList("Default", _upn).Result;
       _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
     }
+
+
+
     _tableClient = _tableServiceClient.GetTableClient(_tables.First<TablesTableModel>().RowKey);
   }
 
@@ -38,23 +47,31 @@ public class TableAccountHelper
   }
 
 
-  public List<TodoModel> GetToDos()
+  public async Task<Dictionary<String, List<TodoModel>>> GetToDos()
   {
+    var tmpList = new List<TodoModel>();
     if (_tableClient == null) {
-      return new List<TodoModel>();
+      return new Dictionary<String,List<TodoModel>>();
     }
+
+    foreach(var table in _tables) {
+      var tableClient = _tableServiceClient.GetTableClient(table.RowKey);
+      _todos[table.RowKey] = await EnumerateDocumentsAsync(tableClient);
+    }
+
     _telemetryClient.TrackEvent("ListTodo");
     _telemetryClient.TrackTrace("TraceMessage GetToDos");
 
-    return EnumerateDocumentsAsync(_tableClient);
+    // return await EnumerateDocumentsAsync(_tableClient);
+    return _todos;
   }
 
-  public async Task<TodoModel> PostToDo(TodoModel _todo)
+  public async Task<TodoModel> PostToDo(TodoModel _todo, string listName)
   {
     _telemetryClient.TrackEvent("CreateTodo");
     _telemetryClient.TrackMetric("CUSTOM_CreatedTodo_DescriptionLength", _todo.TaskDescription.Length);
     _telemetryClient.TrackTrace("TraceMessage CreateToDos");
-    return await InsertItem(_todo);
+    return await InsertItem(_todo, listName);
   }
 
    public async Task<Azure.Response> PostCreateToDoList(String _listName)
@@ -70,24 +87,24 @@ public class TableAccountHelper
     return await DeleteToDoList(_listName, _upn);
   }
 
-  public async Task<TodoModel> MarkDoneToDo(string _rowKey)
+  public async Task<TodoModel> MarkDoneToDo(string rowKey, string tableName)
   {
     _telemetryClient.TrackEvent("MarkDoneTodo");
-    return await UpdateToDo(_rowKey);
+    return await UpdateToDo(rowKey, tableName);
   }
 
-  public async Task<Azure.Response> DeleteToDo(string _rowKey)
+  public async Task<Azure.Response> DeleteToDo(string rowKey, string listName)
   {
     _telemetryClient.TrackEvent("DeleteTodo");
     _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
     _telemetryClient.TrackException(new OverflowException());
-    return await DelToDo(_rowKey);
+    return await DelToDo(rowKey, listName);
   }
 
-  private List<TodoModel> EnumerateDocumentsAsync(TableClient _tableClient)
+  private async Task<List<TodoModel>> EnumerateDocumentsAsync(TableClient _tableClient)
   {
     List<TodoModel> tmpTodos = new List<TodoModel>();
-    foreach (TodoModel todo in _tableClient.Query<TodoModel>())
+    await foreach (TodoModel todo in _tableClient.QueryAsync<TodoModel>())
     {
       tmpTodos.Add(todo);
     }
@@ -96,13 +113,13 @@ public class TableAccountHelper
     return tmpTodos;
   }
 
-  private async Task<TodoModel> InsertItem(TodoModel _todoItem)
+  private async Task<TodoModel> InsertItem(TodoModel _todoItem, String listName)
   {
     if (_todoItem == null)
     {
       throw new NullReferenceException();
     }
-
+    _tableClient = _tableServiceClient.GetTableClient(listName);
     try
     {
       Azure.Response result;
@@ -119,10 +136,10 @@ public class TableAccountHelper
     
   }
 
-  private async Task<TodoModel> UpdateToDo(string _rowKey)
+  private async Task<TodoModel> UpdateToDo(string rowKey, string tableName)
   {
-    
-    Pageable<TodoModel> queryResultsFilter = _tableClient.Query<TodoModel>(filter: $"RowKey eq '{_rowKey}'");
+    _tableClient = _tableServiceClient.GetTableClient(tableName);
+    Pageable<TodoModel> queryResultsFilter = _tableClient.Query<TodoModel>(filter: $"RowKey eq '{rowKey}'");
 
     Console.WriteLine($"The query returned {queryResultsFilter.Count()} entities.");
 
@@ -151,12 +168,13 @@ public class TableAccountHelper
     return m;
   }
 
-  private async Task<Azure.Response> DelToDo(string _rowKey)
+  private async Task<Azure.Response> DelToDo(string rowKey, string listName)
   {
+    _tableClient = _tableServiceClient.GetTableClient(listName);
     Azure.Response result;
     try
     {
-      result = await _tableClient.DeleteEntityAsync("TODO", _rowKey);
+      result = await _tableClient.DeleteEntityAsync(listName, rowKey);
     }
     catch (System.Exception e)
     {

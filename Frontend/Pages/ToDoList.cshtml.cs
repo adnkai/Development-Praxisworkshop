@@ -8,7 +8,7 @@ public class ToDoListModel : PageModel
 {
   private readonly ILogger<PrivacyModel> _logger;
   private readonly IConfiguration _config;
-  public List<TodoModel> todos;
+  public Dictionary<String, List<TodoModel>> todos;
   public List<TablesTableModel> todoLists;
   private static TableAccountHelper todo;
   private readonly TelemetryClient _telemetryClient;
@@ -20,7 +20,7 @@ public class ToDoListModel : PageModel
     _telemetryClient = telemetryClient;
     _logger = logger;
     _config = config;
-    todos = new List<TodoModel>();
+    todos = new Dictionary<String, List<TodoModel>>();
     _httpContextAccessor = httpContextAccessor;
     _user = _httpContextAccessor.HttpContext.User;
     todo = new TableAccountHelper(_config, _telemetryClient, _user);
@@ -29,13 +29,13 @@ public class ToDoListModel : PageModel
   public async Task<IActionResult> OnGetAsync()
   {
     await Task.Run(() => {
-      todos = todo!.GetToDos();
+      todos = todo!.GetToDos().Result;
       todoLists = todo!.GetToDoLists();
     });
     return Page();
   }
 
-  public async Task<IActionResult> OnPostInsertAsync(string todoTask)
+  public async Task<IActionResult> OnPostInsertAsync(string todoTask, string listName)
   {
     if (String.IsNullOrEmpty(todoTask))
     {
@@ -43,23 +43,24 @@ public class ToDoListModel : PageModel
     }
 
     var model = new TodoModel();
+    model.PartitionKey = listName;
     model.TaskDescription = todoTask;
 
-    await todo!.PostToDo(model);
+    await todo!.PostToDo(model, listName);
 
     return RedirectToPage("/ToDoList");
   }
 
-  public async Task<IActionResult> OnPostMarkDoneAsync(string id)
+  public async Task<IActionResult> OnPostMarkDoneAsync(string rowkey, string listName)
   {
-    await todo!.MarkDoneToDo(id);
+    await todo!.MarkDoneToDo(rowkey, listName);
 
     return RedirectToPage("/ToDoList");
   }
 
-  public async Task<IActionResult> OnPostDeleteToDoAsync(string deleteId)
+  public async Task<IActionResult> OnPostDeleteToDoAsync(string rowKey, string listName)
   {
-    await todo!.DeleteToDo(deleteId);
+    await todo!.DeleteToDo(rowKey, listName);
 
     return RedirectToPage("/ToDoList");
   }
