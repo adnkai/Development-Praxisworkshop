@@ -80,4 +80,11 @@ public class ToDoListModel : PageModel
 
     return RedirectToPage("/ToDoList");
   }
+
+  public async Task<IActionResult> OnPostArchiveToDoListAsync(string listName)
+  {
+    await todo!.ArchiveList(listName);
+
+    return RedirectToPage("/ToDoList");
+  }
 }

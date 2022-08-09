@@ -48,6 +48,9 @@ global using Azure.Storage.Blobs.Models;
 // Storage - Tables | Deprecated but works
 global using Azure.Data.Tables;
 
+// Storage - Queues
+global using Azure.Storage.Queues;
+
 // Diagnostics
 global using System.Diagnostics;
 

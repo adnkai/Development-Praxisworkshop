@@ -9,7 +9,7 @@ public class TableAccountHelper
   private ClaimsPrincipal _user;
   private String _upn;
   private Pageable<TablesTableModel> _tables;
-
+  private IConfiguration _config;
   public Dictionary<String, List<TodoModel>> _todos;
 
 
@@ -17,23 +17,16 @@ public class TableAccountHelper
 
   public TableAccountHelper(IConfiguration config, TelemetryClient telemetry, ClaimsPrincipal user)
   {
+    _config = config;
     _telemetryClient = telemetry;
-    _tableServiceClient = new TableServiceClient(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
+    _tableServiceClient = new TableServiceClient(_config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
     _tableServiceClient.CreateTableIfNotExistsAsync(_coreTableName).GetAwaiter().GetResult();
     _coreTableClient = _tableServiceClient.GetTableClient(_coreTableName);
     _user = user;
     _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
-    
 
     _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
     _todos = new Dictionary<string, List<TodoModel>>();
-
-    // if (_tables.Count() < 1) {
-    //   _ = CreateToDoList("Default", _upn).Result;
-    //   _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
-    // }
-
-
 
     if (_tables.Count() > 0) {
       _tableClient = _tableServiceClient.GetTableClient(_tables.First<TablesTableModel>().RowKey);
@@ -103,6 +96,14 @@ public class TableAccountHelper
     _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
     _telemetryClient.TrackException(new OverflowException());
     return await DelToDo(rowKey, listName);
+  }
+
+  public async Task<Azure.Response> ArchiveList(string listName)
+  {
+    _telemetryClient.TrackEvent("DeleteTodo");
+    _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
+    _telemetryClient.TrackException(new OverflowException());
+    return await Archive(listName);
   }
 
   private async Task<List<TodoModel>> EnumerateDocumentsAsync(TableClient _tableClient)
@@ -186,6 +187,24 @@ public class TableAccountHelper
       throw;
     }
     return result;
+  }
+
+  private async Task<Azure.Response> Archive(string listName)
+  {
+    // Queue Zeug
+    var qClient = new QueueClient(_config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"), "archiveq");
+    _ = await qClient.CreateIfNotExistsAsync();
+    
+    _tableClient = _tableServiceClient.GetTableClient(listName);
+    List<TodoModel> todos = await EnumerateDocumentsAsync(_tableClient);
+
+    var batch = new List<Task>();
+    foreach (TodoModel item in todos)
+    {
+      batch.Add(qClient.SendMessageAsync(item.TaskDescription));
+    }
+    await Task.WhenAll(batch);
+    return null;
   }
 
   private async Task<Azure.Response> CreateToDoList(string _listName, string upn)

@@ -38,6 +38,9 @@
                             <td>
                                 <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete List</button> 
                             </td>
+                            <td>
+                                <button type="submit" class="btn btn-warning" asp-page-handler="ArchiveToDoList">Archive</button> 
+                            </td>
                             @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
                         </div>
                     </div>
