@@ -1,39 +1,27 @@
-@page
+@page 
 @model ToDoListModel
 @{
     ViewData["Title"] = "ToDo List";
-    ViewData["listname"] = "";
-    ViewData["toDoList"] = new List<TodoModel>();
 }
 <h1>@ViewData["Title"]</h1>
 @await Html.PartialAsync("_ListOverviewPartial")
 
-
-@* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    @foreach(var listName in Model.todos.Keys) {
-    <ul class="navbar-nav flex-grow-1">
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="@listName">@listName</a>
-            </li>
-    </ul>
-    @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
-    }
-</div> *@
 @if(Model.todos.Count() > 0) {
     <form  method="post" class="mb-3">
     
     <nav aria-label="Page navigation example">
         <div class="accordion" id="accordion">
             @foreach(var listName in Model.todos.Keys) {
+                
                 <input type="hidden" name="todolistname" value="@listName" />
                 <div class="accordion-item">
                     <p>
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@listName" aria-expanded="false" aria-controls="@listName">
                             @listName
                         </button>
-                        
                     </p>
-                    <div id="@listName" class="accordion-collapse collapse" data-bs-parent="#accordion" >
+                        
+                        <div id="@listName" class="accordion-collapse collapse" data-bs-parent="#accordion" >
                         <div class="accordion-body">
                             <td>
                                 <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete List</button> 
@@ -41,6 +29,7 @@
                             <td>
                                 <button type="submit" class="btn btn-warning" asp-page-handler="ArchiveToDoList">Archive</button> 
                             </td>
+                            
                             @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
                         </div>
                     </div>

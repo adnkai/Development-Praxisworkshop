@@ -10,7 +10,7 @@ public class ToDoListModel : PageModel
   private readonly IConfiguration _config;
   public Dictionary<String, List<TodoModel>> todos;
   public List<TablesTableModel> todoLists;
-  private static TableAccountHelper todo;
+  private static TableAccountHelper _tableAccountHelper;
   private readonly TelemetryClient _telemetryClient;
   private IHttpContextAccessor _httpContextAccessor;
   private ClaimsPrincipal _user;
@@ -23,14 +23,14 @@ public class ToDoListModel : PageModel
     todos = new Dictionary<String, List<TodoModel>>();
     _httpContextAccessor = httpContextAccessor;
     _user = _httpContextAccessor.HttpContext.User;
-    todo = new TableAccountHelper(_config, _telemetryClient, _user);
+    _tableAccountHelper = new TableAccountHelper(_config, _telemetryClient, _user);
   }
 
   public async Task<IActionResult> OnGetAsync()
   {
     await Task.Run(() => {
-      todos = todo!.GetToDos().Result;
-      todoLists = todo!.GetToDoLists();
+      todos = _tableAccountHelper!.GetToDos().Result;
+      todoLists = _tableAccountHelper!.GetToDoLists();
     });
     return Page();
   }
@@ -46,21 +46,20 @@ public class ToDoListModel : PageModel
     model.PartitionKey = listName;
     model.TaskDescription = todoTask;
 
-    await todo!.PostToDo(model, listName);
-
+    await _tableAccountHelper!.PostToDo(model, listName);
     return RedirectToPage("/ToDoList");
   }
 
   public async Task<IActionResult> OnPostMarkDoneAsync(string rowkey, string listName)
   {
-    await todo!.MarkDoneToDo(rowkey, listName);
+    await _tableAccountHelper!.MarkDoneToDo(rowkey, listName);
 
     return RedirectToPage("/ToDoList");
   }
 
   public async Task<IActionResult> OnPostDeleteToDoAsync(string rowKey, string listName)
   {
-    await todo!.DeleteToDo(rowKey, listName);
+    await _tableAccountHelper!.DeleteToDo(rowKey, listName);
 
     return RedirectToPage("/ToDoList");
   }
@@ -68,7 +67,7 @@ public class ToDoListModel : PageModel
   public async Task<IActionResult> OnPostCreateToDoListAsync(string todolistname)
   {
     // string upn = User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
-    await todo!.PostCreateToDoList(todolistname);
+    await _tableAccountHelper!.PostCreateToDoList(todolistname);
     
     return RedirectToPage("/ToDoList");
   }
@@ -76,14 +75,14 @@ public class ToDoListModel : PageModel
   public async Task<IActionResult> OnPostDeleteToDoListAsync(string todolistname)
   {
     // string upn = User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
-    await todo!.PostDeleteToDoList(todolistname);
+    await _tableAccountHelper!.PostDeleteToDoList(todolistname);
 
     return RedirectToPage("/ToDoList");
   }
 
   public async Task<IActionResult> OnPostArchiveToDoListAsync(string listName)
   {
-    await todo!.ArchiveList(listName);
+    await _tableAccountHelper!.ArchiveList(listName);
 
     return RedirectToPage("/ToDoList");
   }

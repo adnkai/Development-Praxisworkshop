@@ -4,15 +4,18 @@
 <form  method="post" class="mb-3">
   <div class="mb-3">
     <label for="todotask" class="form-label">Task Description</label>
+    <div id="todoHelp" class="form-text">Create a new ToDo</div>
     <input type="text" class="form-control" id="todotask" aria-describedby="todoHelp" name="todotask">
     <input type="hidden" class="form-control" id="listName" aria-describedby="listName" name="listName" value="@Model.listName">
-    <div id="todoHelp" class="form-text">What do you want to do?</div>
+  <button type="submit" class="btn btn-primary" asp-page-handler="Insert">Create ToDo</button>
+    
   </div>
-  <button type="submit" class="btn btn-primary" asp-page-handler="Insert">Submit</button>
 </form>
 
 
-<table class="table table-striped">
+@if (@Model.todoList.Count > 0) {
+
+    <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Task</th>
@@ -51,5 +54,8 @@
     
     </tbody>
 </table>
+
+
+}
 
 </div>
