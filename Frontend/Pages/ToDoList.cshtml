@@ -8,12 +8,6 @@
 <h1>@ViewData["Title"]</h1>
 @await Html.PartialAsync("_ListOverviewPartial")
 
-<script>
-    function setupViewData() {
-        ViewData["toDoList"] = null;
-        ViewData["listName"] = "";
-    }
-</script>
 
 @* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
     @foreach(var listName in Model.todos.Keys) {
@@ -25,24 +19,33 @@
     @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
     }
 </div> *@
-
-@foreach(var listName in Model.todos.Keys) {
-    <p>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#@listName" aria-expanded="false" aria-controls="@listName">
-        @listName
-    </button>
-    </p>
+@if(Model.todos.Count() > 0) {
+    <form  method="post" class="mb-3">
     
-    @if (listName == "Default") {
-        <div class="collapse show" id="@listName">
-            @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
+    <nav aria-label="Page navigation example">
+        <div class="accordion" id="accordion">
+            @foreach(var listName in Model.todos.Keys) {
+                <input type="hidden" name="todolistname" value="@listName" />
+                <div class="accordion-item">
+                    <p>
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@listName" aria-expanded="false" aria-controls="@listName">
+                            @listName
+                        </button>
+                        
+                    </p>
+                    <div id="@listName" class="accordion-collapse collapse" data-bs-parent="#accordion" >
+                        <div class="accordion-body">
+                            <td>
+                                <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete List</button> 
+                            </td>
+                            @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
+                        </div>
+                    </div>
+                </div>
+            } 
         </div>
-    } else {
-        <div class="collapse" id="@listName">
-            @await Html.PartialAsync("_ListPartial", new {Model = Model, todoList = Model.todos[listName], listName = listName})
-        </div>
-    }
+    </nav>
+    </form>
 }
-
 
 

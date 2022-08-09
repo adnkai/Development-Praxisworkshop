@@ -12,6 +12,14 @@ a {
   color: #0366d6;
 }
 
+.form-select {
+  max-width: 25%;
+}
+
+.btn {
+  min-width: 100px;
+  margin: 0 2px 0 2px;
+}
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

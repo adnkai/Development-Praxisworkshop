@@ -72,4 +72,12 @@ public class ToDoListModel : PageModel
 
     return RedirectToPage("/ToDoList");
   }
+
+  public async Task<IActionResult> OnPostDeleteToDoListAsync(string todolistname)
+  {
+    // string upn = User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
+    await todo!.PostDeleteToDoList(todolistname);
+
+    return RedirectToPage("/ToDoList");
+  }
 }

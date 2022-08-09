@@ -45,9 +45,9 @@ public class ToDoListFunctionModel : PageModel
     return RedirectToPage("/ToDoListFunction");
   }
 
-  public async Task<IActionResult> OnPostDeleteToDoAsync(string deleteId)
+  public async Task<IActionResult> OnPostDeleteToDoAsync(string rowkey)
   {
-    await todo!.DeleteToDo(deleteId);
+    await todo!.DeleteToDo(rowkey);
 
     return RedirectToPage("/ToDoListFunction");
   }

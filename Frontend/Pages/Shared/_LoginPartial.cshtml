@@ -1,13 +1,15 @@
 ﻿@{
-    ViewData["Name"] = @User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value;
+    ViewData["Name"] = @User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value.Split(" ")[0];
 }
 
 
 <ul class="navbar-nav">
 @if (User.Identity.IsAuthenticated)
 {
+
+        
         <li class="nav-item">
-            <span class="navbar-text text-dark"><strong>Hello @ViewData["Name"]!</strong></span>
+            <span class="nav-link text-dark"><strong>Hi @ViewData["Name"]!</strong></span>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>

@@ -28,14 +28,16 @@ public class TableAccountHelper
     _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
     _todos = new Dictionary<string, List<TodoModel>>();
 
-    if (_tables.Count() < 1) {
-      _ = CreateToDoList("Default", _upn).Result;
-      _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    // if (_tables.Count() < 1) {
+    //   _ = CreateToDoList("Default", _upn).Result;
+    //   _tables = _coreTableClient.Query<TablesTableModel>(filter: $"PartitionKey eq '{_upn!}'");
+    // }
+
+
+
+    if (_tables.Count() > 0) {
+      _tableClient = _tableServiceClient.GetTableClient(_tables.First<TablesTableModel>().RowKey);
     }
-
-
-
-    _tableClient = _tableServiceClient.GetTableClient(_tables.First<TablesTableModel>().RowKey);
   }
 
   public List<TablesTableModel> GetToDoLists()
@@ -54,9 +56,11 @@ public class TableAccountHelper
       return new Dictionary<String,List<TodoModel>>();
     }
 
-    foreach(var table in _tables) {
-      var tableClient = _tableServiceClient.GetTableClient(table.RowKey);
-      _todos[table.RowKey] = await EnumerateDocumentsAsync(tableClient);
+    if (_tables.Count() > 0) {
+      foreach(var table in _tables) {
+        var tableClient = _tableServiceClient.GetTableClient(table.RowKey);
+        _todos[table.RowKey] = await EnumerateDocumentsAsync(tableClient);
+      }
     }
 
     _telemetryClient.TrackEvent("ListTodo");
@@ -210,6 +214,8 @@ public class TableAccountHelper
     try
     {
       result = await _tableServiceClient.DeleteTableAsync(_listName);
+      result = await _coreTableClient.DeleteEntityAsync(upn, _listName);
+      
       return result;
     }
     catch (System.Exception e)

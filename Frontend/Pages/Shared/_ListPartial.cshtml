@@ -1,5 +1,6 @@
 
 <div class="card card-body">
+    <h2>@Model.listName</h2>
 <form  method="post" class="mb-3">
   <div class="mb-3">
     <label for="todotask" class="form-label">Task Description</label>
@@ -27,34 +28,28 @@
         
         <form  method="post" class="mb-3">
         <tr>
+            <input type="hidden" name="rowkey" value="@todo.RowKey" />
+            <input type="hidden" name="listName" value="@Model.listName" />
             <td>@todo.TaskDescription</td>
             <td>
                 @if(todo.IsCompleted)
                 {
                     @Html.Raw("&#x2713;")
                     <button type="submit" class="btn btn-outline-warning" asp-page-handler="MarkDone">Undo</button>
-                    <input type="hidden" name="rowkey" value="@todo.RowKey" />
-                    <input type="hidden" name="listName" value="@Model.listName" />
-                    
                 }
                 else
                 {
                     <button type="submit" class="btn btn-outline-success" asp-page-handler="MarkDone">Mark Done</button>
-                    <input type="hidden" name="rowkey" value="@todo.RowKey" />
-                    <input type="hidden" name="listName" value="@Model.listName" />
                 }
             </td>
             <td>
-                <button type="submit" class="btn btn-outline-danger" asp-page-handler="DeleteToDo">Delete</button>
-                <input type="hidden" name="deleteId" value="@todo.RowKey" />
-                <input type="hidden" name="listName" value="@Model.listName" />
-
+                <button type="submit" class="btn btn-outline-danger" asp-page-handler="DeleteToDo">Delete Item</button>
             </td>
         </tr>
-        
         </form>
     }
     
     </tbody>
 </table>
+
 </div>

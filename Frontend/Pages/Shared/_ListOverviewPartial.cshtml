@@ -1,18 +1,4 @@
 
-
-<form  method="post" class="mb-3">
-    <select name="TodoLists" id="todoList">
-        @foreach (var item in Model.todoLists)
-        {
-            <option value=@item.RowKey>@item.RowKey</option>
-        }
-    </select>
-    @if (Model.todoLists.Count > 1) {
-        <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Submit</button>        
-    }
-</form>
-
-
 <form  method="post" class="mb-3">
   <div class="mb-3">
     <label for="todolistname" class="form-label">ToDo List Name</label>
@@ -20,4 +6,20 @@
     <div id="todoHelp" class="form-text">What do you want to do?</div>
   </div>
   <button type="submit" class="btn btn-primary" asp-page-handler="CreateToDoList">Submit</button>
+
 </form>
+@* 
+@if (Model.todoLists.Count > 0) {
+  
+<form method="post" class="mb-3">
+    <select class="form-select" name="todolistname" id="todolistname">
+        @foreach (var item in Model.todoLists)
+        {
+          <option value=@item.RowKey>@item.RowKey</option>
+        }
+    </select>
+    @if (Model.todoLists.Count > 0) {
+        <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete</button>        
+    }
+</form>
+} *@
