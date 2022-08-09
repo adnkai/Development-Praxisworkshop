@@ -69,7 +69,7 @@ public class ToDoListModel : PageModel
   {
     // string upn = User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
     await todo!.PostCreateToDoList(todolistname);
-
+    
     return RedirectToPage("/ToDoList");
   }
 

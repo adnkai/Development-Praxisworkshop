@@ -17,6 +17,9 @@ public class TodoModel : ITableEntity
   [JsonProperty(PropertyName = "Timestamp")]
   public DateTimeOffset? Timestamp { get; set; } = DateTimeOffset.Now;
 
+  [JsonProperty(PropertyName = "CreatedTime")]
+  public DateTime? CreatedTime { get; set; } = DateTime.UtcNow;
+
   [JsonProperty(PropertyName = "TaskDescription")]
   public string TaskDescription { get; set; }
 
