@@ -10,6 +10,8 @@ global using System.Net.Http.Headers;
 global using System.Web;
 // Dependencies
 global using Newtonsoft.Json;
+global using Newtonsoft.Json.Linq;
+
 global using Development_Praxisworkshop.Helper;
 
 // AppInsight
@@ -59,3 +61,9 @@ global using Azure;
 global using Azure.Identity;
 global using Azure.Security.KeyVault.Secrets;
 global using Microsoft.Identity.Client;
+
+// Events
+
+global using Microsoft.AspNetCore.SignalR;
+global using Development_Praxisworkshop.Hubs;
+global using Development_Praxisworkshop.Models;

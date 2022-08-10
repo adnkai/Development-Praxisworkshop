@@ -8,8 +8,8 @@ public class ToDoListModel : PageModel
 {
   private readonly ILogger<PrivacyModel> _logger;
   private readonly IConfiguration _config;
-  public Dictionary<String, List<TodoModel>> todos;
-  public List<TablesTableModel> todoLists;
+  public Dictionary<String, List<ListElementModel>> todos;
+  public List<CoreTableModel> todoLists;
   private static TableAccountHelper _tableAccountHelper;
   private readonly TelemetryClient _telemetryClient;
   private IHttpContextAccessor _httpContextAccessor;
@@ -20,7 +20,7 @@ public class ToDoListModel : PageModel
     _telemetryClient = telemetryClient;
     _logger = logger;
     _config = config;
-    todos = new Dictionary<String, List<TodoModel>>();
+    todos = new Dictionary<String, List<ListElementModel>>();
     _httpContextAccessor = httpContextAccessor;
     _user = _httpContextAccessor.HttpContext.User;
     _tableAccountHelper = new TableAccountHelper(_config, _telemetryClient, _user);
@@ -42,7 +42,7 @@ public class ToDoListModel : PageModel
       return RedirectToPage("/ToDoList");
     }
 
-    var model = new TodoModel();
+    var model = new ListElementModel();
     model.PartitionKey = listName;
     model.TaskDescription = todoTask;
 

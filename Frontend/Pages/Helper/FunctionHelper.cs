@@ -14,7 +14,7 @@ public class FunctionHelper
     client.DefaultRequestHeaders.Add("x-functions-key", config.GetSection("Function").GetValue<string>("DefaultHostKey"));
   }
 
-  public async Task<List<TodoModel>> GetToDos()
+  public async Task<List<ListElementModel>> GetToDos()
   {
     _telemetryClient.TrackEvent("ListTodoFunction");
     return await EnumerateDocumentsAsync();
@@ -38,9 +38,9 @@ public class FunctionHelper
     return await DelToDo(_rowKey);
   }
 
-  private async Task<List<TodoModel>> EnumerateDocumentsAsync()
+  private async Task<List<ListElementModel>> EnumerateDocumentsAsync()
   {
-    List<TodoModel> tmpTodos = new List<TodoModel>();
+    List<ListElementModel> tmpTodos = new List<ListElementModel>();
 
     try
     {
@@ -55,7 +55,7 @@ public class FunctionHelper
       }
 
       var data = await response.Content.ReadAsStringAsync();
-      tmpTodos = JsonConvert.DeserializeObject<List<TodoModel>>(data)!;
+      tmpTodos = JsonConvert.DeserializeObject<List<ListElementModel>>(data)!;
     }
     catch { }
 
@@ -107,7 +107,7 @@ public class FunctionHelper
       return await Task.FromResult<string>("Unssuccessfull");
     }
     
-    TodoModel toUpdate = JsonConvert.DeserializeObject<TodoModel>(await tData.Content.ReadAsStringAsync())!;
+    ListElementModel toUpdate = JsonConvert.DeserializeObject<ListElementModel>(await tData.Content.ReadAsStringAsync())!;
     toUpdate.IsCompleted = toUpdate.IsCompleted ? false : true;
 
     var content = new StringContent(JsonConvert.SerializeObject(toUpdate));

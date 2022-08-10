@@ -1,6 +1,6 @@
 namespace Development_Praxisworkshop.Helper;
 
-public class TablesTableModel : ITableEntity
+public class CoreTableModel : ITableEntity
 {
   [JsonProperty(PropertyName = "PartitionKey")] // UPN
   public string PartitionKey { get; set; } = Guid.NewGuid().ToString("n");
@@ -17,14 +17,14 @@ public class TablesTableModel : ITableEntity
   [JsonProperty(PropertyName = "Timestamp")]
   public DateTimeOffset? Timestamp { get; set; } = DateTimeOffset.Now;
 
-  public TablesTableModel()
+  public CoreTableModel()
   {
     PartitionKey = "";
     RowKey = new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
     ETag = ETag.All;
   }
 
-  public TablesTableModel(string _rowKey, string _partititonKey)
+  public CoreTableModel(string _rowKey, string _partititonKey)
   {
     PartitionKey = _partititonKey!;
     RowKey = _rowKey ?? new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 

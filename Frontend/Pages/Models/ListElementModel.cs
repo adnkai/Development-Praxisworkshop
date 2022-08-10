@@ -1,6 +1,6 @@
 namespace Development_Praxisworkshop.Helper;
 
-public class TodoModel : ITableEntity
+public class ListElementModel : ITableEntity
 {
   [JsonProperty(PropertyName = "PartitionKey")]
   public string PartitionKey { get; set; } = Guid.NewGuid().ToString("n");
@@ -26,7 +26,7 @@ public class TodoModel : ITableEntity
   [JsonProperty(PropertyName = "IsCompleted")]
   public bool IsCompleted { get; set; }
 
-  public TodoModel()
+  public ListElementModel()
   {
     PartitionKey = "TODO";
     RowKey = new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 
@@ -34,7 +34,7 @@ public class TodoModel : ITableEntity
     TaskDescription = "";
   }
 
-  public TodoModel(string _rowKey, string _partititonKey)
+  public ListElementModel(string _rowKey, string _partititonKey)
   {
     PartitionKey = _partititonKey ?? "TODO";
     RowKey = _rowKey ?? new Random().Next(0, 9999999) + ":" + new Random().Next(0, 9999999); 

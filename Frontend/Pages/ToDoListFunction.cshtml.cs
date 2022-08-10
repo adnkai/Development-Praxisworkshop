@@ -6,7 +6,7 @@ public class ToDoListFunctionModel : PageModel
 {
   private readonly ILogger<PrivacyModel> _logger;
   private readonly IConfiguration _config;
-  public List<TodoModel> todos;
+  public List<ListElementModel> todos;
   private static FunctionHelper todo;
   private readonly TelemetryClient _telemetryClient;
 
@@ -15,7 +15,7 @@ public class ToDoListFunctionModel : PageModel
     _telemetryClient = telemetryClient;
     _logger = logger;
     _config = config;
-    todos = new List<TodoModel>();
+    todos = new List<ListElementModel>();
     todo = new FunctionHelper(_config, _telemetryClient);
   }
 

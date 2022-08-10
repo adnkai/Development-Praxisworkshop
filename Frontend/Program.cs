@@ -38,6 +38,8 @@ builder.Services.AddServerSideBlazor()
 builder.Services.AddSingleton<IDataSingleton, DataSingleton>();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddSignalR();
 // Include Application Insights with config from appsettings.json
 // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
 builder.Services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
@@ -76,6 +78,7 @@ app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapHub<GridEventsHub>("/hubs/gridevents");
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
