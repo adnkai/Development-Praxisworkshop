@@ -14,16 +14,26 @@ public class ToDoListModel : PageModel
   private readonly TelemetryClient _telemetryClient;
   private IHttpContextAccessor _httpContextAccessor;
   private ClaimsPrincipal _user;
+  private IDistributedCache _distributetCache;
+  private String _upn;
+  public String listName;
 
-  public ToDoListModel(ILogger<PrivacyModel> logger, IConfiguration config, TelemetryClient telemetryClient, IHttpContextAccessor httpContextAccessor)
+  public ToDoListModel(
+    ILogger<PrivacyModel> logger, 
+    IConfiguration config, 
+    TelemetryClient telemetryClient, 
+    IHttpContextAccessor httpContextAccessor,
+    IDistributedCache distributedCache)
   {
     _telemetryClient = telemetryClient;
+    _distributetCache = distributedCache;
     _logger = logger;
     _config = config;
     todos = new Dictionary<String, List<ListElementModel>>();
     _httpContextAccessor = httpContextAccessor;
     _user = _httpContextAccessor.HttpContext.User;
     _tableAccountHelper = new TableAccountHelper(_config, _telemetryClient, _user);
+    _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
   }
 
   public async Task<IActionResult> OnGetAsync()
@@ -31,6 +41,7 @@ public class ToDoListModel : PageModel
     await Task.Run(() => {
       todos = _tableAccountHelper!.GetToDos().Result;
       todoLists = _tableAccountHelper!.GetToDoLists();
+      listName = _distributetCache.GetStringAsync($"{_upn}:listName").Result;
     });
     return Page();
   }
@@ -45,6 +56,9 @@ public class ToDoListModel : PageModel
     var model = new ListElementModel();
     model.PartitionKey = listName;
     model.TaskDescription = todoTask;
+    
+    await _distributetCache.RemoveAsync($"{_upn}:listName");
+    await _distributetCache.SetStringAsync($"{_upn}:listName", listName);
 
     await _tableAccountHelper!.PostToDo(model, listName);
     return RedirectToPage("/ToDoList");

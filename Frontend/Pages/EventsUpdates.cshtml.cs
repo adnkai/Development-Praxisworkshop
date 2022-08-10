@@ -25,11 +25,9 @@ public class EventsUpdatesModel : PageModel
     
     public async Task<IActionResult> OnPost()
     {
-        Console.WriteLine("POSTED EVENT");
         using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
         {
             var jsonContent = await reader.ReadToEndAsync();
-            Console.WriteLine(jsonContent);
 
             // Check the event type.
             // Return the validation code if it's 
@@ -100,7 +98,7 @@ public class EventsUpdatesModel : PageModel
     {
         var details = JsonConvert.DeserializeObject<CloudEvent<dynamic>>(jsonContent);
         var eventData = JObject.Parse(jsonContent);
-
+        
         await this._hubContext.Clients.All.SendAsync(
             "gridupdate",
             details.Id,
@@ -126,11 +124,8 @@ public class EventsUpdatesModel : PageModel
             // Check for the spec version property.
             var version = eventData["specversion"].Value<string>();
             if (!string.IsNullOrEmpty(version)) return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        } catch {}
+
 
         return false;
     }

@@ -2,6 +2,7 @@
 @model ToDoListModel
 @{
     ViewData["Title"] = "ToDo List";
+    string showyesno = "";
 }
 <h1>@ViewData["Title"]</h1>
 @await Html.PartialAsync("_ListOverviewPartial")
@@ -12,6 +13,7 @@
     <nav aria-label="Page navigation example">
         <div class="accordion" id="accordion">
             @foreach(var listName in Model.todos.Keys) {
+                showyesno = listName == Model.listName ? "show" : "";
                 
                 <input type="hidden" name="todolistname" value="@listName" />
                 <div class="accordion-item">
@@ -21,7 +23,7 @@
                         </button>
                     </p>
                         
-                        <div id="@listName" class="accordion-collapse collapse" data-bs-parent="#accordion" >
+                        <div id="@listName" class="accordion-collapse collapse @showyesno" data-bs-parent="#accordion" >
                         <div class="accordion-body">
                             <td>
                                 <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete List</button> 

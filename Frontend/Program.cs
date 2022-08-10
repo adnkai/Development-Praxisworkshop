@@ -2,7 +2,6 @@
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 
@@ -11,13 +10,54 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
     .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
     .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
-    .AddInMemoryTokenCaches();
+    // .AddSessionTokenCaches();
+    .AddDistributedTokenCaches();
+    // .AddInMemoryTokenCaches();
 
+
+// AUTH
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("ClaimsTest", policy => policy.RequireClaim("Contacts.Read"));
     options.AddPolicy("MustHaveOneDrive", policy => policy.RequireClaim("Files.ReadWrite"));
     //options.AddPolicy("Roles", policy => policy.RequireClaim("Roles"));
 });
+
+// Token Cache
+builder.Services.Configure<MsalDistributedTokenCacheAdapterOptions>(options => 
+  {
+    options.DisableL1Cache = false;
+    // Or limit the memory (by default, this is 500 MB)
+    // options.L1CacheOptions.SizeLimit = 1024 * 1024 * 1024; // 1 GB
+
+    // You can choose if you encrypt or not encrypt the cache
+    options.Encrypt = false;
+
+    // And you can set eviction policies for the distributed cache.
+    options.SlidingExpiration = TimeSpan.FromHours(1);
+  });
+
+
+// REDIS
+builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = Configuration.GetValue<string>("Redis:ConnectionString");
+        // options.InstanceName = Configuration.GetValue<string>("Redis:Instance");
+    });
+
+// Reconnect Redis somehow?!
+builder.Services.Configure<MsalDistributedTokenCacheAdapterOptions>(options => 
+{
+    options.OnL2CacheFailure = (ex) =>
+    {
+        if (ex is StackExchange.Redis.RedisConnectionException)
+        {
+        
+            return true; //try to do the cache operation again
+        }
+        return false;
+    };
+});
+
 
         // Enable Authentication globally
 builder.Services.AddControllersWithViews(options =>
@@ -42,7 +82,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
 // Include Application Insights with config from appsettings.json
 // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#using-applicationinsightsserviceoptions
-builder.Services.AddApplicationInsightsTelemetry(Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey"));
+builder.Services.AddApplicationInsightsTelemetry(options => {
+    options.ConnectionString = Configuration.GetSection("ApplicationInsights").GetValue<string>("ConnectionString");
+});
 // Configure SignOut redirect (doesn't work though...)
 builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {

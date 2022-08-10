@@ -1,5 +1,6 @@
 namespace Development_Praxisworkshop.Pages;
 
+[Authorize]
 public class ProfileModel : PageModel
 {
     private readonly ILogger<ProfileModel> _logger;
@@ -8,21 +9,28 @@ public class ProfileModel : PageModel
 
     private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
 
+    private HttpContext _httpContext;
+
     private string[] _graphScopes;
 
     public ProfileModel(ILogger<ProfileModel> logger, 
                         IConfiguration configuration,
                         GraphServiceClient graphServiceClient,
-                        MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler)
+                        MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler,
+                        IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _graphServiceClient = graphServiceClient;
+        _httpContext = httpContextAccessor.HttpContext;
+
         this._consentHandler = consentHandler;
+        
         _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ')!;
     }
 
     public void OnGet()
     {
+        var token = _httpContext.GetTokenAsync("OpenIdConnect", "access_token").Result;
         User currentUser = _graphServiceClient.Me.Request().GetAsync().GetAwaiter().GetResult();
 
         try
