@@ -1,0 +1,12 @@
+{
+    "disabled": false,
+    "bindings": [
+        {
+            "type": "queueTrigger",
+            "direction": "in",
+            "name": "myQueueItem",
+            "queueName": "archiveq",
+            "connection":"DefaultEndpointsProtocol=https;AccountName=wrkshpdatastore;AccountKey=qXHmc4Yo0r3IaxJ59MY8xlZFyTs5ZcKq3KqcVYzijG7w3kOvmWD2HUa1N4BxE3pkLlr1Tz0K6cK9/LWwAgBI0A==;EndpointSuffix=core.windows.net"
+        }
+    ]
+}
