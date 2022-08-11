@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.4.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.8" />
     <!-- <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" /> -->
     
     <PackageReference Include="Microsoft.Graph" Version="4.34.0" />
@@ -21,7 +22,7 @@
     <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.25.1" />
     <PackageReference Include="Microsoft.identity.web.ui" Version="1.18.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
   </ItemGroup>
 
 </Project>

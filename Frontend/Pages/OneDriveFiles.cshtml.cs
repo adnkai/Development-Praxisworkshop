@@ -34,7 +34,6 @@ public class OneDriveFilesModel : PageModel
         //string[] scopes = new string[]{"Contacts.Read","Family.Read"}; // Inkrementelle Anforderung automatisch durch bekanntgabe gaaaanz oben
         string[] scopes = new string[]{"files.readwrite", "Sites.Read.All"}; // Inkrementelle Anforderung automatisch durch bekanntgabe gaaaanz oben
         _accessToken = _tokenAcquisition.GetAccessTokenForUserAsync(scopes).Result;
-        Console.WriteLine(_accessToken);
         _files = _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync().Result;
 
     }

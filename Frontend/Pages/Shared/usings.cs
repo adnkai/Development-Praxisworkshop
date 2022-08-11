@@ -67,3 +67,9 @@ global using Microsoft.Identity.Client;
 global using Microsoft.AspNetCore.SignalR;
 global using Development_Praxisworkshop.Hubs;
 global using Development_Praxisworkshop.Models;
+
+
+// Cache
+global using Microsoft.Extensions.Caching.StackExchangeRedis;
+global using Microsoft.Extensions.Caching.Distributed;
+global using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
