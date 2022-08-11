@@ -1,8 +1,10 @@
 namespace Development_Praxisworkshop.Pages;
 
-// [AllowAnonymous]
+[AllowAnonymous]
+[IgnoreAntiforgeryToken(Order = 1001)]
+
 //[Authorize(Policy = "ClaimsTest")]
-[Authorize]
+// [Authorize]
 
 public class ToDoListModel : PageModel
 {
@@ -45,6 +47,24 @@ public class ToDoListModel : PageModel
     });
     return Page();
   }
+
+  // Todos API Test
+  public async Task<IActionResult> OnPost()
+  {
+      using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+      {
+        
+          var jsonContent = await reader.ReadToEndAsync();
+          Console.WriteLine(jsonContent);
+          
+          return await PostedSomething();
+      }
+  }
+
+  private async Task<IActionResult> PostedSomething()
+    {
+        return new EmptyResult();
+    }
 
   public async Task<IActionResult> OnPostInsertAsync(string todoTask, string listName)
   {
