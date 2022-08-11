@@ -2,155 +2,168 @@
 namespace Project;
 class TableSettings
 {
-  public string StorageAccount { get; }
-  // public string StorageKey { get; }
+  //Infos we will need
   public string StorageConnectionString { get; }
-  public string TableName { get; }
+  public string UPN { get; }
+  //public string StorageAccount { get; }
+  //public string StorageKey { get; }
 
-  private CloudTable _table { get; set; }
+  //Access to CoreTable und filter further Requests
+  private TableServiceClient _tableServiceClient;
+  
+  //Current Table of interest
+  private TableClient _currentTable { get; set; }
+  
+  //Core Table where access is defined by upn
+  private TableClient _coreTable { get; set; }
+  
+  //Name of our CoreTable we use
+  private string CoreTableName = "TablesTable";
 
-  public TableSettings(string tableName)
+  public TableSettings(string _upn)
   {
-    
-    if (string.IsNullOrEmpty(tableName))
+    if (string.IsNullOrEmpty(_upn))
     {
-      throw new ArgumentNullException("TableName");
+      throw new ArgumentNullException("missing upn");
     }
     
-    this.StorageAccount = System.Environment.GetEnvironmentVariable("STORAGE_NAME", EnvironmentVariableTarget.Process);
-    // this.StorageKey = System.Environment.GetEnvironmentVariable("STORAGE_KEY", EnvironmentVariableTarget.Process);
+    //this.StorageAccount = System.Environment.GetEnvironmentVariable("STORAGE_NAME", EnvironmentVariableTarget.Process);
     this.StorageConnectionString = System.Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING", EnvironmentVariableTarget.Process);
-    Console.WriteLine(StorageConnectionString);
-    this.TableName = tableName;
-  }
+    this.UPN = _upn;
 
-  private async Task GetTableAsync()
-  {
-    //Account
-    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(this.StorageConnectionString);
-
-    //Client
-    CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-
-    //Table
-    CloudTable table = tableClient.GetTableReference(this.TableName);
-    await table.CreateIfNotExistsAsync();
-
-    this._table = table;
-  }
-
-  public async Task<Todo> InsertItem(Todo _todoItem)
-  {
-    if (_todoItem == null)
-    {
-      throw new NullReferenceException();
-    }
-
-    if (this._table == null)
-    {
-      await GetTableAsync();
-    }
-
-    TableResult result;
-    TableOperation operation = TableOperation.InsertOrReplace(_todoItem);
-
+    this._tableServiceClient = new TableServiceClient(this.StorageConnectionString);
+    
     try
     {
-      result = await _table.ExecuteAsync(operation);
+      this._coreTable = _tableServiceClient.GetTableClient(this.CoreTableName);
     }
-    catch (System.Exception e)
+    catch(Exception)
     {
-      System.Console.WriteLine(e.StackTrace);
-      throw;
+      _tableServiceClient.CreateTableIfNotExists(this.CoreTableName);
+      this._coreTable = _tableServiceClient.GetTableClient(this.CoreTableName);
     }
-
-    Todo newTodo = (Todo)result.Result;
-
-    return newTodo;
   }
 
-  public async Task<Todo> DeleteItem(Todo _todoItem)
+  public Pageable<CoreTableModel> GetListsForUser()
   {
-    if (_todoItem == null)
-    {
-      throw new NullReferenceException();
-    }
+    //AsyncPageable<CoreTableModel> _pages = this._coreTable.QueryAsync<CoreTableModel>(filter: $"PartitionKey eq '{this.UPN}'");
 
-    if (this._table == null)
-    {
-      await GetTableAsync();
-    }
-
-    TableResult result;
-    TableOperation operation = TableOperation.Delete(_todoItem);
-
-    try
-    {
-      result = await _table.ExecuteAsync(operation);
-    }
-    catch (System.Exception e)
-    {
-      System.Console.WriteLine(e.StackTrace);
-      throw;
-    }
-
-    Todo deletedTodo = (Todo)result.Result;
-
-    return deletedTodo;
+    //await _pages.ToListAsnyc();
+    return this._coreTable.Query<CoreTableModel>(filter: $"PartitionKey eq '{this.UPN}'");
   }
 
-  public async Task<List<Todo>> GetItems()
+  public void GetTable(string _tableName)
   {
-    List<Todo> todos = new List<Todo>();
-
-    if (this._table == null)
+   try
     {
-      await GetTableAsync();
+      this._currentTable = _tableServiceClient.GetTableClient(_tableName);
     }
-
-    TableQuery<Todo> query = new TableQuery<Todo>();
-
-    try
+    catch(Exception)
     {
-      foreach (Todo t in _table.ExecuteQuery(query))
-      {
-        todos.Add(t);
-      }
+      _tableServiceClient.CreateTableIfNotExists(_tableName);
+      this._currentTable = _tableServiceClient.GetTableClient(_tableName);
     }
-    catch (System.Exception e)
-    {
-      System.Console.WriteLine(e.StackTrace);
-      throw;
-    }
-    todos.Sort((x, y) => x.TaskDescription.CompareTo(y.TaskDescription));
-
-    return todos;
   }
 
-  public async Task<Todo> GetItem(string _pKey, string _id)
+  public async Task<ListElementModel> InsertItem(string _tableName, ListElementModel _listElement)
   {
-    Todo todo;
-
-    if (this._table == null)
+    if (_listElement == null)
     {
-      await GetTableAsync();
+      throw new NullReferenceException("Null Element");
     }
 
-    TableOperation operation = TableOperation.Retrieve<Todo>(_pKey, _id);
-
-    TableResult result;
-
-    try
+    GetTable(_tableName);
+    
+    var _response = await this._currentTable.UpsertEntityAsync<ListElementModel>(_listElement);
+    
+    if(_response.IsError)
     {
-      result = await _table.ExecuteAsync(operation);
-      todo = (Todo)result.Result;
-    }
-    catch (System.Exception e)
-    {
-      System.Console.WriteLine(e.StackTrace);
-      throw;
+      throw new OperationCanceledException(_response.ReasonPhrase);
     }
 
-    return todo;
+    return _listElement;
+  }
+
+  public async Task<bool> DeleteItem(string _tableName, string _rowKey)
+  {
+    if (_rowKey == null)
+    {
+      throw new NullReferenceException("Null Element");
+    }
+
+    GetTable(_tableName);
+
+    var _response  = await this._currentTable.DeleteEntityAsync(_tableName, _rowKey);
+    
+    if(_response.IsError)
+    {
+      throw new OperationCanceledException(_response.ReasonPhrase);
+    }
+
+    return !_response.IsError;
+  }
+
+  public async Task<List<ListElementModel>> GetItemsForTable(string _tableName)
+  {
+    GetTable(_tableName);
+
+    List<ListElementModel> _elements = new List<ListElementModel>();
+
+    await foreach (ListElementModel todo in this._currentTable.QueryAsync<ListElementModel>())
+    {
+      _elements.Add(todo);
+    }
+
+    _elements.Sort((x, y) => x.TaskDescription.CompareTo(y.TaskDescription));
+
+    return _elements;
+  }
+
+  public async Task<Dictionary<String, List<ListElementModel>>> GetAllItemsForUser()
+  {
+    Dictionary<String, List<ListElementModel>> _allListsWithElements = new Dictionary<string, List<ListElementModel>>();
+
+    foreach (var _list in GetListsForUser())
+    {
+      _allListsWithElements[_list.RowKey] = await GetItemsForTable(_list.RowKey);
+    }
+
+    return _allListsWithElements;
+  }
+
+  public async Task<ListElementModel> GetItem(string _tableName, string _rowKey)
+  {
+    GetTable(_tableName);
+
+    return await this._currentTable.GetEntityAsync<ListElementModel>(partitionKey: _tableName, rowKey: _rowKey);
+  }
+
+  public async Task<bool> CreateTableForUser(string _tableName)
+  {
+    var _tableResponse = await this._tableServiceClient.CreateTableIfNotExistsAsync(_tableName);
+    
+    if (_tableResponse.GetRawResponse().IsError)
+    {
+      return false;
+    }
+
+    CoreTableModel _newTable = new CoreTableModel(_tableName, this.UPN);
+    var response = await this._coreTable.AddEntityAsync<CoreTableModel>(_newTable);
+    
+    return !response.IsError;
+  }
+
+  public async Task<bool> DeleteTableForUser(string _tableName)
+  {
+    var _response = await this._coreTable.DeleteEntityAsync(this.UPN, _tableName);
+    
+    if(_response.IsError)
+    {
+      return false;
+    }
+
+    var _tableResponse = await this._tableServiceClient.DeleteTableAsync(_tableName);
+    
+    return !_tableResponse.IsError;
   }
 }
