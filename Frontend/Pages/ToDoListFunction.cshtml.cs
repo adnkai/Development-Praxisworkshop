@@ -37,6 +37,8 @@ public class ToDoListFunctionModel : PageModel
     _user = _httpContextAccessor.HttpContext.User;
     _functionHelper = new FunctionHelper(_config, _telemetryClient, _user);
     _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
+    listName = _distributetCache.GetStringAsync($"{_upn}:listName").Result;
+
   }
 
   public async Task<IActionResult> OnGetAsync()
