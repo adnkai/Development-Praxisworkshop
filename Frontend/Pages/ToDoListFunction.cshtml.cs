@@ -56,7 +56,9 @@ public class ToDoListFunctionModel : PageModel
     }
 
     await _functionHelper!.PostToDo(todoTask, listName);
-
+    await _distributetCache.RemoveAsync($"{_upn}:listName");
+    await _distributetCache.SetStringAsync($"{_upn}:listName", listName);
+    
     return RedirectToPage("/ToDoListFunction");
   }
 
