@@ -1,24 +1,29 @@
 namespace Development_Praxisworkshop.Pages;
 
-[AllowAnonymous]
-[IgnoreAntiforgeryToken(Order = 1001)]
+// [AllowAnonymous]
+// [IgnoreAntiforgeryToken(Order = 1001)]
 
 //[Authorize(Policy = "ClaimsTest")]
-// [Authorize]
+[Authorize]
 
 public class ToDoListModel : PageModel
 {
-  private readonly ILogger<PrivacyModel> _logger;
-  private readonly IConfiguration _config;
-  public Dictionary<String, List<ListElementModel>> todos;
-  public List<CoreTableModel> todoLists;
-  private static TableAccountHelper _tableAccountHelper;
-  private readonly TelemetryClient _telemetryClient;
-  private IHttpContextAccessor _httpContextAccessor;
-  private ClaimsPrincipal _user;
-  private IDistributedCache _distributetCache;
-  private String _upn;
-  public String listName;
+  #region Public
+    public String listName;
+    public Dictionary<String, List<ListElementModel>> todos;
+    public List<CoreTableModel> todoLists;
+  #endregion
+
+  #region Private
+    private readonly ILogger<PrivacyModel> _logger;
+    private readonly IConfiguration _config;
+    private static TableAccountHelper _tableAccountHelper;
+    private readonly TelemetryClient _telemetryClient;
+    private IHttpContextAccessor _httpContextAccessor;
+    private ClaimsPrincipal _user;
+    private IDistributedCache _distributetCache;
+    private String _upn;
+  #endregion
 
   public ToDoListModel(
     ILogger<PrivacyModel> logger, 
@@ -48,7 +53,7 @@ public class ToDoListModel : PageModel
     return Page();
   }
 
-  // Todos API Test
+  #region Todos API Test
   public async Task<IActionResult> OnPost()
   {
       using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
@@ -62,9 +67,10 @@ public class ToDoListModel : PageModel
   }
 
   private async Task<IActionResult> PostedSomething()
-    {
-        return new EmptyResult();
-    }
+  {
+    return await Task<IActionResult>.Run(() => {return new EmptyResult();});
+  }
+  #endregion
 
   public async Task<IActionResult> OnPostInsertAsync(string todoTask, string listName)
   {

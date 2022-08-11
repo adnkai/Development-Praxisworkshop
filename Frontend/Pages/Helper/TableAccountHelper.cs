@@ -52,52 +52,6 @@ public class TableAccountHelper
     return _todos;
   }
 
-  private void useless(){
-    
-  // public async Task<ListElementModel> PostToDo(ListElementModel _todo, string listName)
-  // {
-  //   _telemetryClient.TrackEvent("CreateTodo");
-  //   _telemetryClient.TrackMetric("CUSTOM_CreatedTodo_DescriptionLength", _todo.TaskDescription.Length);
-  //   _telemetryClient.TrackTrace("TraceMessage CreateToDos");
-  //   return await InsertItem(_todo, listName);
-  // }
-
-  //  public async Task<Azure.Response> PostCreateToDoList(String _listName)
-  // {
-  //   _telemetryClient.TrackEvent("CreateTodoList");
-  //   _telemetryClient.TrackTrace("TraceMessage CreateToDoList");
-  //   return await CreateToDoList(_listName, _upn);
-  // }
-
-  // public async Task<Azure.Response> PostDeleteToDoList(String _listName)
-  // {
-  //   _telemetryClient.TrackEvent("DeleteTodoList");
-  //   return await DeleteToDoList(_listName, _upn);
-  // }
-
-  // public async Task<ListElementModel> MarkDoneToDo(string rowKey, string tableName)
-  // {
-  //   _telemetryClient.TrackEvent("MarkDoneTodo");
-  //   return await UpdateToDo(rowKey, tableName);
-  // }
-
-  // public async Task<Azure.Response> DeleteToDo(string rowKey, string listName)
-  // {
-  //   _telemetryClient.TrackEvent("DeleteTodo");
-  //   _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
-  //   _telemetryClient.TrackException(new OverflowException());
-  //   return await DelToDo(rowKey, listName);
-  // }
-
-  // public async Task<Azure.Response> ArchiveList(string listName)
-  // {
-  //   _telemetryClient.TrackEvent("DeleteTodo");
-  //   _telemetryClient.TrackTrace("TraceMessage DeleteToDos");
-  //   _telemetryClient.TrackException(new OverflowException());
-  //   return await Archive(listName);
-  // }
-  }
-
   private async Task<List<ListElementModel>> EnumerateDocumentsAsync(TableClient _tableClient)
   {
     List<ListElementModel> tmpTodos = new List<ListElementModel>();

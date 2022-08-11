@@ -4,51 +4,87 @@ namespace Development_Praxisworkshop.Pages;
 [Authorize]
 public class ToDoListFunctionModel : PageModel
 {
-  private readonly ILogger<PrivacyModel> _logger;
-  private readonly IConfiguration _config;
-  public List<ListElementModel> todos;
-  private static FunctionHelper todo;
-  private readonly TelemetryClient _telemetryClient;
+  #region Public
+    public String listName;
+    public Dictionary<String, List<ListElementModel>> todos;
+    public List<CoreTableModel> todoLists;
+  #endregion
 
-  public ToDoListFunctionModel(ILogger<PrivacyModel> logger, IConfiguration config, TelemetryClient telemetryClient)
+  #region Private
+    private readonly ILogger<PrivacyModel> _logger;
+    private readonly IConfiguration _config;
+    private static FunctionHelper _functionHelper;
+    private readonly TelemetryClient _telemetryClient;
+    private IHttpContextAccessor _httpContextAccessor;
+    private ClaimsPrincipal _user;
+    private IDistributedCache _distributetCache;
+    private String _upn;
+  #endregion
+
+  public ToDoListFunctionModel(
+    ILogger<PrivacyModel> logger, 
+    IConfiguration config, 
+    TelemetryClient telemetryClient, 
+    IHttpContextAccessor httpContextAccessor,
+    IDistributedCache distributedCache)
   {
     _telemetryClient = telemetryClient;
+    _distributetCache = distributedCache;
     _logger = logger;
     _config = config;
-    todos = new List<ListElementModel>();
-    todo = new FunctionHelper(_config, _telemetryClient);
+    todos = new Dictionary<String, List<ListElementModel>>();
+    _httpContextAccessor = httpContextAccessor;
+    _user = _httpContextAccessor.HttpContext.User;
+    _functionHelper = new FunctionHelper(_config, _telemetryClient, _user);
+    _upn = _user.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
   }
 
   public async Task<IActionResult> OnGetAsync()
   {
-    todos = await todo!.GetToDos();
+    todos = await _functionHelper!.GetToDos();
 
     return Page();
   }
 
-  public async Task<IActionResult> OnPostInsertAsync(string todoTask)
+  public async Task<IActionResult> OnPostInsertAsync(string todoTask, string listName)
   {
     if (String.IsNullOrEmpty(todoTask))
     {
       return RedirectToPage("/ToDoListFunction");
     }
 
-    await todo!.PostToDo(todoTask);
+    await _functionHelper!.PostToDo(todoTask, listName);
 
     return RedirectToPage("/ToDoListFunction");
   }
 
-  public async Task<IActionResult> OnPostMarkDoneAsync(string id)
+  public async Task<IActionResult> OnPostMarkDoneAsync(string rowkey, string listName)
   {
-    await todo!.MarkDoneToDo(id);
+
+    await _functionHelper!.Update(rowkey, listName);
 
     return RedirectToPage("/ToDoListFunction");
   }
 
-  public async Task<IActionResult> OnPostDeleteToDoAsync(string rowkey)
+  public async Task<IActionResult> OnPostDeleteToDoAsync(string rowkey, string listName)
   {
-    await todo!.DeleteToDo(rowkey);
+    await _functionHelper!.DeleteToDo(rowkey, listName);
 
     return RedirectToPage("/ToDoListFunction");
   }
+
+  public async Task<IActionResult> OnPostCreateToDoListAsync(string listName)
+  {
+    await _functionHelper!.CreateToDoList(listName);
+
+    return RedirectToPage("/ToDoListFunction");
+  }
+
+  public async Task<IActionResult> OnPostDeleteToDoListAsync(string listName)
+  {
+    await _functionHelper!.DeleteToDoList(listName);
+
+    return RedirectToPage("/ToDoListFunction");
+  }
+
 }
