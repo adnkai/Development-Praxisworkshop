@@ -27,7 +27,7 @@ public class FunctionHelper
 
     try
     {
-      var response = await client.GetAsync($"getAllElementsForUser?upn={_upn}");
+      var response = await client.GetAsync($"getElements?upn={_upn}");
 
       if (!response.IsSuccessStatusCode)
       {
@@ -79,9 +79,10 @@ public class FunctionHelper
   #endregion
 
   #region Update Todos (Mark Done)
+    
     public async Task<string> Update(string rowKey, string listName)
     {
-      var tData = await client.GetAsync($"getSingleElementInListForUser/{listName}/{rowKey}/?upn={_upn}");
+      var tData = await client.GetAsync($"getElements/{listName}/{rowKey}/?upn={_upn}");
 
       if(!tData.IsSuccessStatusCode)
       {
