@@ -4,25 +4,23 @@ public static class deleteRoutes
 {
   [FunctionName("deleteElement")]
   public static async Task<IActionResult> Run(
-      [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "deleteElement/{tableName}")] HttpRequest req,
-      ILogger log, string tableName)
+      [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "deleteElement/{tableName}/{id}")] HttpRequest req,
+      ILogger log, string tableName, string id)
   {
     log.LogInformation("Delete ListElementModel");
 
-    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-    dynamic data = JsonConvert.DeserializeObject<ListElementModel>(requestBody);
     string _upn = req.Query["upn"];
 
     try
     {
-      await (new TableSettings(_upn)).DeleteItem(tableName, data);
+      await (new TableSettings(_upn)).DeleteItem(tableName, id);
     }
     catch (Exception)
     {
       return new BadRequestObjectResult(null); 
     }
 
-    return new OkObjectResult((string)data?.RowKey);
+    return new OkObjectResult(id);
   }
 
   [FunctionName("deleteTable")]

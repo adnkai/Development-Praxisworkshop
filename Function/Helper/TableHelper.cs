@@ -84,23 +84,23 @@ class TableSettings
     return _listElement;
   }
 
-  public async Task<ListElementModel> DeleteItem(string _tableName, ListElementModel _listElement)
+  public async Task<bool> DeleteItem(string _tableName, string _rowKey)
   {
-    if (_listElement == null)
+    if (_rowKey == null)
     {
       throw new NullReferenceException("Null Element");
     }
 
     GetTable(_tableName);
 
-    var _response  = await this._currentTable.DeleteEntityAsync(_tableName, _listElement.RowKey);
+    var _response  = await this._currentTable.DeleteEntityAsync(_tableName, _rowKey);
     
     if(_response.IsError)
     {
       throw new OperationCanceledException(_response.ReasonPhrase);
     }
 
-    return _listElement;
+    return !_response.IsError;
   }
 
   public async Task<List<ListElementModel>> GetItemsForTable(string _tableName)
