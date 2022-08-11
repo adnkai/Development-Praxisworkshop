@@ -154,7 +154,7 @@ public class FunctionHelper
     );
     var content = new StringContent(json);
 
-    var response = await client.PostAsync($"postElement/{listName}?upn={_upn}", content);
+    var response = await client.PostAsync($"postTable/{listName}?upn={_upn}", content);
 
     if (!response.IsSuccessStatusCode)
     {
