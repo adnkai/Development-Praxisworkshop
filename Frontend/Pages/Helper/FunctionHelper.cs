@@ -148,7 +148,7 @@ public class FunctionHelper
     var json = JsonConvert.SerializeObject(
       new Dictionary<string, string>
       {
-        { "ListName", listName}
+        { "listName", listName}
       }
     );
     var content = new StringContent(json);

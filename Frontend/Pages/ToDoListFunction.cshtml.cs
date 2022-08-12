@@ -77,16 +77,16 @@ public class ToDoListFunctionModel : PageModel
     return RedirectToPage("/ToDoListFunction");
   }
 
-  public async Task<IActionResult> OnPostCreateToDoListAsync(string listName)
+  public async Task<IActionResult> OnPostCreateToDoListAsync(string todolistname)
   {
-    await _functionHelper!.CreateToDoList(listName);
+    await _functionHelper!.CreateToDoList(todolistname);
 
     return RedirectToPage("/ToDoListFunction");
   }
 
-  public async Task<IActionResult> OnPostDeleteToDoListAsync(string listName)
+  public async Task<IActionResult> OnPostDeleteToDoListAsync(string todolistname)
   {
-    await _functionHelper!.DeleteToDoList(listName);
+    await _functionHelper!.DeleteToDoList(todolistname);
 
     return RedirectToPage("/ToDoListFunction");
   }

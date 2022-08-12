@@ -132,15 +132,15 @@ public class TableAccountHelper
 
   
 
-  public async Task<Azure.Response> PostCreateToDoList(string _listName)
+  public async Task<Azure.Response> PostCreateToDoList(string listName)
   {
     Azure.Response result;
     try
     {
-      await _tableServiceClient.CreateTableIfNotExistsAsync(_listName);
+      await _tableServiceClient.CreateTableIfNotExistsAsync(listName);
       // _tableClient = _tableServiceClient.GetTableClient(_listName);
 
-      var model = new CoreTableModel(_listName, _upn);
+      var model = new CoreTableModel(listName, _upn);
       result = await _coreTableClient.AddEntityAsync<CoreTableModel>(model);
 
       return result;
@@ -152,13 +152,13 @@ public class TableAccountHelper
     }
   }
 
-  public async Task<Azure.Response> PostDeleteToDoList(string _listName)
+  public async Task<Azure.Response> PostDeleteToDoList(string listName)
   {
     Azure.Response result;
     try
     {
-      result = await _tableServiceClient.DeleteTableAsync(_listName);
-      result = await _coreTableClient.DeleteEntityAsync(_upn, _listName);
+      result = await _tableServiceClient.DeleteTableAsync(listName);
+      result = await _coreTableClient.DeleteEntityAsync(_upn, listName);
       
       return result;
     }
