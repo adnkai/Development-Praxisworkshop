@@ -142,57 +142,61 @@ public class FunctionHelper
     }
   #endregion
 
-  public async Task<string> CreateToDoList(string listName)
-  {
-
-    var json = JsonConvert.SerializeObject(
-      new Dictionary<string, string>
-      {
-        { "listName", listName}
-      }
-    );
-    var content = new StringContent(json);
-
-    var response = await client.PostAsync($"postTable/{listName}?upn={_upn}", content);
-
-    if (!response.IsSuccessStatusCode)
+  #region CreateToDo
+    public async Task<string> CreateToDoList(string listName)
     {
-      System.Console.WriteLine("Unnssuccessfull");
-      System.Console.WriteLine(response.StatusCode);
-
-      return await Task.FromResult<string>("Unnssuccessfull");
-    }
-
-    return await response.Content.ReadAsStringAsync();
-  }
-
-  public async Task<String> DeleteToDoList(string listName)
-  {
-    var json = JsonConvert.SerializeObject(
-      new Dictionary<string, string>
+  
+      var json = JsonConvert.SerializeObject(
+        new Dictionary<string, string>
         {
-          { "ListName", listName }
+          { "listName", listName}
         }
       );
-
-      var request = new HttpRequestMessage {
-            Method = HttpMethod.Delete,
-            RequestUri = new Uri($"{client.BaseAddress}deleteTable/{listName}?upn={_upn}")
-            // ,Content = new StringContent(json)
-      };
-
-      var response = await client.SendAsync(request);
-
+      var content = new StringContent(json);
+  
+      var response = await client.PostAsync($"postTable/{listName}?upn={_upn}", content);
+  
       if (!response.IsSuccessStatusCode)
       {
-        System.Console.WriteLine("Unssuccessfull");
+        System.Console.WriteLine("Unnssuccessfull");
         System.Console.WriteLine(response.StatusCode);
-
-        return await Task.FromResult<string>("Unssuccessfull");
+  
+        return await Task.FromResult<string>("Unnssuccessfull");
       }
-
+  
       return await response.Content.ReadAsStringAsync();
-  }
+    }
+  #endregion
+
+  #region DeleteTodo
+    public async Task<String> DeleteToDoList(string listName)
+    {
+      var json = JsonConvert.SerializeObject(
+        new Dictionary<string, string>
+          {
+            { "ListName", listName }
+          }
+        );
+
+        var request = new HttpRequestMessage {
+              Method = HttpMethod.Delete,
+              RequestUri = new Uri($"{client.BaseAddress}deleteTable/{listName}?upn={_upn}")
+              // ,Content = new StringContent(json)
+        };
+
+        var response = await client.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+          System.Console.WriteLine("Unssuccessfull");
+          System.Console.WriteLine(response.StatusCode);
+
+          return await Task.FromResult<string>("Unssuccessfull");
+        }
+
+        return await response.Content.ReadAsStringAsync();
+    }
+  #endregion
 
 }
 

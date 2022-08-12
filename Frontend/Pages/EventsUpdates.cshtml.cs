@@ -1,7 +1,7 @@
 namespace Development_Praxisworkshop.Pages;
 
 [AllowAnonymous]
-// [IgnoreAntiforgeryToken(Order = 1001)]
+[IgnoreAntiforgeryToken(Order = 1001)]
 
 public class EventsUpdatesModel : PageModel
 {
