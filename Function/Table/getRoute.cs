@@ -9,7 +9,6 @@ public static class getTodos
   {
     log.LogInformation("Get All Elements For User");
     
-    var partitionKey = System.Environment.GetEnvironmentVariable("TABLE_PARTITION_KEY", EnvironmentVariableTarget.Process);
     string _upn = req.Query["upn"];
     
     Dictionary<String, List<ListElementModel>> result;
@@ -18,9 +17,9 @@ public static class getTodos
     {
       result = await (new TableSettings(_upn)).GetAllItemsForUser();
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return new BadRequestObjectResult(null);
+      return new BadRequestObjectResult(e.Message);
     }
 
     return new OkObjectResult(result);
@@ -41,9 +40,9 @@ public static class getTodos
     {
       result = await (new TableSettings(_upn)).GetItemsForTable(tableName);
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return new BadRequestObjectResult(null);
+      return new BadRequestObjectResult(e.Message);
     }
 
     return new OkObjectResult(result);
@@ -53,10 +52,7 @@ public static class getTodos
   public static async Task<IActionResult> Run2(
       [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getElements/{tableName}/{id}")] HttpRequest req,
       ILogger log, string tableName, string id)
-  {
-    log.LogInformation(id);
-    log.LogInformation(tableName);
-    
+  {   
     string _upn = req.Query["upn"];
     
     ListElementModel result;
@@ -65,9 +61,9 @@ public static class getTodos
     {
       result = await (new TableSettings(_upn)).GetItem(tableName, id);
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return new BadRequestObjectResult(null);
+      return new BadRequestObjectResult(e.Message);
     }
 
     return new OkObjectResult(result);

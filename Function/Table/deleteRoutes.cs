@@ -15,9 +15,9 @@ public static class deleteRoutes
     {
       await (new TableSettings(_upn)).DeleteItem(tableName, id);
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return new BadRequestObjectResult(null); 
+      return new BadRequestObjectResult(e.Message); 
     }
 
     return new OkObjectResult(id);
@@ -36,9 +36,9 @@ public static class deleteRoutes
     {
       await (new TableSettings(_upn)).DeleteTableForUser(tableName);
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return new BadRequestObjectResult(null); 
+      return new BadRequestObjectResult(e.Message); 
     }
 
     return new OkObjectResult(tableName);

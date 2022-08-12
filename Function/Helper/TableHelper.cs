@@ -32,7 +32,6 @@ class TableSettings
     this.UPN = _upn;
 
     this._tableServiceClient = new TableServiceClient(this.StorageConnectionString);
-    
     try
     {
       this._coreTable = _tableServiceClient.GetTableClient(this.CoreTableName);
@@ -40,7 +39,7 @@ class TableSettings
     catch(Exception)
     {
       _tableServiceClient.CreateTableIfNotExists(this.CoreTableName);
-      this._coreTable = _tableServiceClient.GetTableClient(this.CoreTableName);
+      this._coreTable = _tableServiceClient.GetTableClient(this.CoreTableName); 
     }
   }
 
@@ -56,12 +55,15 @@ class TableSettings
   {
    try
     {
-      this._currentTable = _tableServiceClient.GetTableClient(_tableName);
+      this._currentTable = this._tableServiceClient.GetTableClient(_tableName);
+      Console.WriteLine($"Current Table Success: Table: {_tableName}, UPN: {this.UPN}, {this._currentTable.AccountName}");
     }
-    catch(Exception)
+    catch(Exception e)
     {
+      Console.WriteLine($"Current Table Error: {e.Message}, Table: {_tableName}, UPN: {this.UPN}");
       _tableServiceClient.CreateTableIfNotExists(_tableName);
-      this._currentTable = _tableServiceClient.GetTableClient(_tableName);
+      this._currentTable = this._tableServiceClient.GetTableClient(_tableName);
+      Console.WriteLine($"Current Table Maybe doch: {this._currentTable.AccountName}");
     }
   }
 
@@ -144,11 +146,13 @@ class TableSettings
     
     if (_tableResponse.GetRawResponse().IsError)
     {
+      Console.WriteLine($"Create Table Error: {_tableResponse.GetRawResponse().ReasonPhrase}, Table: {_tableName}, UPN: {this.UPN}, ServiceClient: {this._tableServiceClient.AccountName}");
       return false;
     }
 
     CoreTableModel _newTable = new CoreTableModel(_tableName, this.UPN);
     var response = await this._coreTable.AddEntityAsync<CoreTableModel>(_newTable);
+    Console.WriteLine($"Create Table Error: {response.ReasonPhrase}, Table: {_tableName}, UPN: {this.UPN}");
     
     return !response.IsError;
   }
