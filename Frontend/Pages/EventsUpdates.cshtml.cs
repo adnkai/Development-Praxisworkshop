@@ -21,29 +21,6 @@ public class EventsUpdatesModel : PageModel
     {
         this._hubContext = gridEventsHubContext;
         _config = config;
-        String EventHubConnectionString = "Endpoint=sb://devworkshophub.servicebus.windows.net/;SharedAccessKeyName=appServiceAccessKey;SharedAccessKey=/GfEh76EF1zww2HJaxghfgjo5X4OqOaYSSal77PAeIA=";
-        string EventHubName = "functionhub";
-        //HarrHarr
-        RegisterEvents(EventHubName, EventHubConnectionString).GetAwaiter().GetResult();
-        
-    }
-    
-    private async Task RegisterEvents(string eventHubName, string eventHubConnectionString) {
-        Console.WriteLine("Registering EventProcessor...");
-
-        var eventProcessorHost = new EventProcessorHost(
-            eventHubName,
-            PartitionReceiver.DefaultConsumerGroupName,
-            eventHubConnectionString,
-            "DefaultEndpointsProtocol=https;AccountName=devworkshopstore;AccountKey=DCJt95MywqQ1qxQzcaOTmDsp6kj/J0U9iicxK2mZjKYXUCZkkBEbzEdEL4qT3p7HjUa+7doQ40te4+I5yA1KFw==;EndpointSuffix=core.windows.net",
-            "events");
-        // Registers the Event Processor Host and starts receiving messages
-        await eventProcessorHost.RegisterEventProcessorAsync<SimpleEventProcessor>();
-        Console.WriteLine("Unregistering...");
-        // Disposes of the Event Processor Host
-        
-
-        
     }
     
     public async Task<IActionResult> OnPost()
