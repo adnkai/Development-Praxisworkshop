@@ -2,6 +2,8 @@
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 
+
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 
@@ -14,6 +16,20 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddDistributedTokenCaches();
     // .AddInMemoryTokenCaches();
 
+// App Configuration with managed Identity
+Configuration.AddAzureAppConfiguration(options =>
+{
+    // Add Environment Variables
+    options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+    .UseFeatureFlags(options => {
+        options.CacheExpirationInterval = TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInMinutes"));
+    })
+    .Select(KeyFilter.Any, LabelFilter.Null) // Any Key, any label
+    .ConfigureRefresh(refresh => { // Configure sentinel refresh
+        refresh.Register("Sentinel:RefreshKey", refreshAll: true)
+            .SetCacheExpiration(TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInMinutes")));
+    });
+});
 
 // AUTH
 builder.Services.AddAuthorization(options => {
@@ -85,6 +101,9 @@ builder.Services.AddSignalR();
 builder.Services.AddApplicationInsightsTelemetry(options => {
     options.ConnectionString = Configuration.GetSection("ApplicationInsights").GetValue<string>("ConnectionString");
 });
+
+builder.Services.AddFeatureManagement();
+
 // Configure SignOut redirect (doesn't work though...)
 builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {

@@ -14,7 +14,11 @@
     <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.4.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.6" />
+    <PackageReference Include="microsoft.azure.eventhubs" Version="4.3.2" />
+    <PackageReference Include="microsoft.azure.eventhubs.processor" Version="4.3.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.1.0" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
     <!-- <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" /> -->
     
     <PackageReference Include="Microsoft.Graph" Version="4.34.0" />
@@ -23,6 +27,7 @@
     <PackageReference Include="Microsoft.identity.web.ui" Version="1.18.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <!-- <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" /> -->
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,8 @@ global using System.Collections.Generic;
 global using System.Net.Http;
 global using System.Net.Http.Headers;
 global using System.Web;
+global using System.Configuration;
+
 // Dependencies
 global using Newtonsoft.Json;
 global using Newtonsoft.Json.Linq;
@@ -19,6 +21,7 @@ global using Microsoft.ApplicationInsights;
 
 // App
 global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.AspNetCore.Builder;
@@ -27,7 +30,7 @@ global using Microsoft.AspNetCore.HttpsPolicy;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.Extensions.Logging;
-
+global using Microsoft.FeatureManagement;
 // Web
 global using Microsoft.Identity.Web;
 global using Microsoft.Identity.Web.UI;
@@ -73,3 +76,7 @@ global using Development_Praxisworkshop.Models;
 global using Microsoft.Extensions.Caching.StackExchangeRedis;
 global using Microsoft.Extensions.Caching.Distributed;
 global using Microsoft.Identity.Web.TokenCacheProviders.Distributed;
+
+// EventHub
+global using Microsoft.Azure.EventHubs;
+global using Microsoft.Azure.EventHubs.Processor;
