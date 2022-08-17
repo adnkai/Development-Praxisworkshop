@@ -20,7 +20,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 Configuration.AddAzureAppConfiguration(options =>
 {
     // Add Environment Variables
-    options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+    // options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+    options.Connect("Endpoint=https://appconfig-devworkshop.azconfig.io;Id=8+E7-lab-s0:pz/2TXNJ0VM7F9JPx2r9;Secret=MTjglr4Wa0WDbrqavFiDgiFsDrhx9pLCTAeWD/b+rXQ=")
     .UseFeatureFlags(options => {
         options.CacheExpirationInterval = TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInMinutes"));
     })
