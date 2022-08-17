@@ -7,15 +7,6 @@ var Configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes").Split(' ');
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
-    .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
-    .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
-    // .AddSessionTokenCaches();
-    .AddDistributedTokenCaches();
-    // .AddInMemoryTokenCaches();
-
 // App Configuration with managed Identity
 Configuration.AddAzureAppConfiguration(options =>
 {
@@ -31,6 +22,17 @@ Configuration.AddAzureAppConfiguration(options =>
             .SetCacheExpiration(TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInMinutes")));
     });
 });
+
+string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes").Split(' ');
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
+    .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
+    .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
+    // .AddSessionTokenCaches();
+    .AddDistributedTokenCaches();
+    // .AddInMemoryTokenCaches();
+
+
 
 // AUTH
 builder.Services.AddAuthorization(options => {
