@@ -20,8 +20,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 Configuration.AddAzureAppConfiguration(options =>
 {
     // Add Environment Variables
-    // options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
-    options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
+    options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+    // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
     .UseFeatureFlags(options => {
         options.CacheExpirationInterval = TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInMinutes"));
     })
