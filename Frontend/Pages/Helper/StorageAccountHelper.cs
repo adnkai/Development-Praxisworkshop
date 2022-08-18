@@ -10,10 +10,8 @@ public class StorageAccountHelper
         //      .AddJsonFile(@"../appsettings.json")
         //      .AddEnvironmentVariables();
 
-        // IConfigurationRoot config = builder.Build();
-        serviceClient = new BlobServiceClient(config.GetSection("StorageAccount").GetValue<string>("StorageConnectionString"));
-        
-
+        // IConfigurationRoot config = builder.Build(); 
+        serviceClient = new BlobServiceClient(config.GetValue<String>("StorageAccount:StorageConnectionString"));
         //EnumerateContainersAsync(serviceClient).GetAwaiter().GetResult();
         images = EnumerateBlobsAsync(serviceClient, "images").GetAwaiter().GetResult();
         //System.Console.WriteLine(GetAccountInfo().Result);

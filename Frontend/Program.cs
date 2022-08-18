@@ -17,9 +17,13 @@ builder.Host.ConfigureAppConfiguration(builder => {
         .ConfigureRefresh(refresh => { // Configure sentinel refresh
             refresh.Register("Sentinel:RefreshKey", refreshAll: true)
                 .SetCacheExpiration(TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInSeconds")));
-        });
+        })
+        .ConfigureKeyVault(kv =>
+            {
+                kv.SetCredential(new ManagedIdentityCredential());
+            });;
         _refresher = options.GetRefresher();
-    });
+    }).AddEnvironmentVariables();
     // Console.WriteLine(Configuration.GetDebugView());
 
 });
