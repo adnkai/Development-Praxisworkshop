@@ -8,14 +8,12 @@
 @await Html.PartialAsync("_ListOverviewPartial")
 
 @if(Model.todos.Count() > 0) {
-    <form  method="post" class="mb-3">
-    
     <nav aria-label="Page navigation example">
         <div class="accordion" id="accordion">
             @foreach(var listName in Model.todos.Keys) {
+
                 showyesno = listName == Model.listName ? "show" : "";
-                
-                <input type="hidden" name="todolistname" value="@listName" />
+                <form  method="post" class="mb-3">
                 <div class="accordion-item">
                     <p>
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@listName" aria-expanded="false" aria-controls="@listName">
@@ -25,6 +23,7 @@
                         
                     <div id="@listName" class="accordion-collapse collapse @showyesno" data-bs-parent="#accordion" >
                         <div class="accordion-body">
+                            <input type="hidden" name="todolistname" value="@listName" />
                             <td>
                                 <button type="submit" class="btn btn-danger" asp-page-handler="DeleteToDoList">Delete List</button> 
                             </td>
@@ -36,8 +35,8 @@
                         </div>
                     </div>
                 </div>
+            </form>
             } 
         </div>
     </nav>
-    </form>
 }
