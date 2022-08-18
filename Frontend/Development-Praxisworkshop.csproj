@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.4.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.aspnetcore" Version="5.1.0" />
     <PackageReference Include="microsoft.azure.eventhubs" Version="4.3.2" />
     <PackageReference Include="microsoft.azure.eventhubs.processor" Version="4.3.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.8" />

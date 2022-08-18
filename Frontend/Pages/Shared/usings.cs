@@ -22,6 +22,7 @@ global using Microsoft.ApplicationInsights;
 // App
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+global using Microsoft.Azure.AppConfiguration.AspNetCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.AspNetCore.Builder;

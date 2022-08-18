@@ -8,7 +8,7 @@ builder.Host.ConfigureAppConfiguration(builder => {
     builder.AddAzureAppConfiguration(options =>
     {
         // Add Environment Variables
-        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new DefaultAzureCredential())
         // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
         .UseFeatureFlags(options => {
             options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
@@ -20,12 +20,11 @@ builder.Host.ConfigureAppConfiguration(builder => {
         })
         .ConfigureKeyVault(kv =>
             {
-                kv.SetCredential(new ManagedIdentityCredential());
-            });;
+                kv.SetCredential(new DefaultAzureCredential());
+            });
         _refresher = options.GetRefresher();
     }).AddEnvironmentVariables();
     // Console.WriteLine(Configuration.GetDebugView());
-
 });
 
 
@@ -33,6 +32,7 @@ builder.Host.ConfigureAppConfiguration(builder => {
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IConfigurationRefresher>(_refresher);
 string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes").Split(' ');
+
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
     .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
@@ -40,8 +40,6 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     // .AddSessionTokenCaches();
     .AddDistributedTokenCaches();
     // .AddInMemoryTokenCaches();
-
-
 
 // AUTH
 builder.Services.AddAuthorization(options => {
@@ -115,6 +113,7 @@ builder.Services.AddApplicationInsightsTelemetry(options => {
 });
 
 builder.Services.AddFeatureManagement();
+
 
 // Configure SignOut redirect (doesn't work though...)
 builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
