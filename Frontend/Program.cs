@@ -8,9 +8,9 @@ builder.Host.ConfigureAppConfiguration(builder => {
     builder.AddAzureAppConfiguration(options =>
     {
         // Add Environment Variables
-        // options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), 
-        //     new DefaultAzureCredential())
-        options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
+        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), 
+            new DefaultAzureCredential())
+        // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
         .UseFeatureFlags(options => {
             options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
         })
