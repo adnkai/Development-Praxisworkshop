@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@* @using Microsoft.FeatureManagement
+@inject IFeatureManager featureManager *@
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -46,11 +49,11 @@
                                 </li>
                             }
                             // Don't show OneDrive Area
-                            @if(Model.showOneDrive){
+                            <feature name="ShowOneDrive">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/OneDriveFiles">OneDrive</a>
                             </li>
-                            }
+                            </feature>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Profile">Profile</a>
                             </li>

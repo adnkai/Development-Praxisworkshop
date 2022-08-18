@@ -1,28 +1,33 @@
 
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
-var Configuration = builder.Configuration;
+ConfigurationManager Configuration = builder.Configuration;
+IConfigurationRefresher _refresher = null;
 
+// App Configuration with managed Identity
+builder.Host.ConfigureAppConfiguration(builder => {
+    builder.AddAzureAppConfiguration(options =>
+    {
+        // Add Environment Variables
+        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
+        // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
+        .UseFeatureFlags(options => {
+            options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
+        })
+        .Select(KeyFilter.Any, LabelFilter.Null) // Any Key, any label
+        .ConfigureRefresh(refresh => { // Configure sentinel refresh
+            refresh.Register("Sentinel:RefreshKey", refreshAll: true)
+                .SetCacheExpiration(TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInSeconds")));
+        });
+        _refresher = options.GetRefresher();
+    });
+    // Console.WriteLine(Configuration.GetDebugView());
+
+});
 
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
-// App Configuration with managed Identity
-Configuration.AddAzureAppConfiguration(options =>
-{
-    // Add Environment Variables
-    options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new ManagedIdentityCredential())
-    // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
-    .UseFeatureFlags(options => {
-        options.CacheExpirationInterval = TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInMinutes"));
-    })
-    .Select(KeyFilter.Any, LabelFilter.Null) // Any Key, any label
-    .ConfigureRefresh(refresh => { // Configure sentinel refresh
-        refresh.Register("Sentinel:RefreshKey", refreshAll: true)
-            .SetCacheExpiration(TimeSpan.FromMinutes(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInMinutes")));
-    });
-});
-
+builder.Services.AddSingleton<IConfigurationRefresher>(_refresher);
 string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes").Split(' ');
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(Configuration.GetSection("Authentication")) // Fetch Auth Data from appsettings.json
@@ -121,6 +126,7 @@ builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.Authentic
 
 
 var app = builder.Build();
+// Console.WriteLine(Configuration.GetDebugView());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
