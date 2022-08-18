@@ -18,7 +18,7 @@ public class TableAccountHelper
   {
     _config = config;
     _telemetryClient = telemetry;
-    _tableServiceClient = new TableServiceClient(_config.GetValue<String>("StorageAccount:StorageConnectionString"));
+    _tableServiceClient = new TableServiceClient(_config.GetValue<String>("StorageAccount:StorageConnectionString2"));
     // Create initial Tables-Table
     _ = _tableServiceClient.CreateTableIfNotExistsAsync(_coreTableName).GetAwaiter().GetResult();
     _coreTableClient = _tableServiceClient.GetTableClient(_coreTableName);

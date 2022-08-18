@@ -8,19 +8,21 @@ builder.Host.ConfigureAppConfiguration(builder => {
     builder.AddAzureAppConfiguration(options =>
     {
         // Add Environment Variables
-        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), new DefaultAzureCredential())
-        // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
+        // options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), 
+        //     new DefaultAzureCredential())
+        options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
         .UseFeatureFlags(options => {
             options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
         })
-        .Select(KeyFilter.Any, LabelFilter.Null) // Any Key, any label
+        .Select(KeyFilter.Any, "Production") // Any Key, any label DO NOT PUT LABELFILTER.NULL if you labeled your keys. THIS TOOK ME HOURS TO FIGURE OUT!
         .ConfigureRefresh(refresh => { // Configure sentinel refresh
             refresh.Register("Sentinel:RefreshKey", refreshAll: true)
                 .SetCacheExpiration(TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInSeconds")));
         })
         .ConfigureKeyVault(kv =>
             {
-                kv.SetCredential(new DefaultAzureCredential());
+                kv.SetCredential(
+                    new DefaultAzureCredential());
             });
         _refresher = options.GetRefresher();
     }).AddEnvironmentVariables();
