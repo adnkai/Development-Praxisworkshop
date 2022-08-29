@@ -1,4 +1,3 @@
-
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
 IConfigurationRefresher _refresher = null;
@@ -16,7 +15,7 @@ builder.Host.ConfigureAppConfiguration(builder => {
         })
         .Select(KeyFilter.Any, "Production") // Any Key, any label DO NOT PUT LABELFILTER.NULL if you labeled your keys. THIS TOOK ME HOURS TO FIGURE OUT!
         .ConfigureRefresh(refresh => { // Configure sentinel refresh
-            refresh.Register("Sentinel:RefreshKey", refreshAll: true)
+            refresh.Register("Sentinel:RefreshKey", "Production", refreshAll: true)
                 .SetCacheExpiration(TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:SentinelRefreshTimeInSeconds")));
         })
         .ConfigureKeyVault(kv =>
@@ -31,7 +30,9 @@ builder.Host.ConfigureAppConfiguration(builder => {
 
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options => {
+    options.Conventions.AddFolderRouteModelConvention("/Privacy", model => {});
+});
 builder.Services.AddSingleton<IConfigurationRefresher>(_refresher);
 string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes").Split(' ');
 
