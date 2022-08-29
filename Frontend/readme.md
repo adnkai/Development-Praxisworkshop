@@ -30,7 +30,12 @@ Wir implementieren Azure AD Authentication (oAuth) in unsere App und spielen ein
 
 Mit Azure Monitoring und *Application Insights* bilden wir das Thema Monitoring ab und schauen uns Statistiken über unsere WebApp an.
 
-**07 - Pipelines**
+**07 - Azure App Configuration**
+
+Mit Azure App Configuration lösen wir die statischen Konfigurationen aus den Services und schaffen eine zentrale Verwaltung.
+Außerdem: Feature Flags!
+
+**08 - Pipelines**
 
 Der Workshop wird abgerundet, indem wir eine CI/CD Pipeline über GitHub Actions erstellen und unser App-/Function-Deployment über Push-Trigger automatisieren.
 Außerdem zeigen wir den Weg auch über Azure DevOps Pipelines.

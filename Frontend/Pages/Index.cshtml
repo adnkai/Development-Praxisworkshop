@@ -13,30 +13,39 @@
 </div>
 
 @if(@User.Identity.IsAuthenticated) {
-<table>
-    <tr>
-        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value</td>
-    </tr>
-    <tr>
-        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value</td>
-    </tr>
-    <tr>
-        <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Role", StringComparison.OrdinalIgnoreCase))?.Value</td>
-    </tr>
-
-    @{
-        var roles = @User.Claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Role))?.Value;
-        Html.DisplayName("Profile " + roles);
-    }
-
-    @foreach (var claim in User.Claims){
+    <table>
         <tr>
-            <td>@claim.Type</td>
-            <td>@claim.Value</td>
+            <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value</td>
         </tr>
-    }
+        <tr>
+            <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value</td>
+        </tr>
+        <tr>
+            <td>@User.Claims?.FirstOrDefault(x => x.Type.Equals("Role", StringComparison.OrdinalIgnoreCase))?.Value</td>
+        </tr>
 
+        @{
+            var roles = @User.Claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Role))?.Value;
+            Html.DisplayName("Profile " + roles);
+        }
+    </table>
 
-</table>
-
+    <div class="accordion-item">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#userinfo" aria-expanded="false" aria-controls="userinfo">
+            Show user info
+        </button>
+            
+        <div id="userinfo" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                <table class="userinfostyle">
+                @foreach (var claim in User.Claims){
+                    <tr>
+                        <td>@claim.Type</td>
+                        <td>@claim.Value</td>
+                    </tr>
+                }
+                </table>
+            </div>
+        </div>
+    </div>
 }

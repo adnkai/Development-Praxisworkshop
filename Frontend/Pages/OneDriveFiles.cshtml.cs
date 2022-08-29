@@ -4,15 +4,20 @@ namespace Development_Praxisworkshop.Pages;
 [AuthorizeForScopes(Scopes = new[]{"files.readwrite", "Sites.Read.All"})] // Welche scopes fordern wir auf dieser seite (ggf.) an?
 public class OneDriveFilesModel : PageModel
 {
-    private readonly ILogger<PrivacyModel> _logger;
-    private readonly IConfiguration _config;
-    readonly ITokenAcquisition _tokenAcquisition;
-    private string _accessToken;
-    private readonly GraphServiceClient _graphServiceClient;
-    public IDriveItemChildrenCollectionPage _files;
-    private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
+    #region Private
+        private readonly ILogger<PrivacyModel> _logger;
+        private readonly IConfiguration _config;
+        private readonly ITokenAcquisition _tokenAcquisition;
+        private string _accessToken;
+        private readonly GraphServiceClient _graphServiceClient;
+        private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
+        private string[] _graphScopes;
+    #endregion
 
-    private string[] _graphScopes;
+    #region Public
+        public IDriveItemChildrenCollectionPage _files;
+    #endregion
+
     public OneDriveFilesModel(ILogger<PrivacyModel> logger, 
                                     IConfiguration config, 
                                     ITokenAcquisition tokenAcquisition,
@@ -35,8 +40,5 @@ public class OneDriveFilesModel : PageModel
         string[] scopes = new string[]{"files.readwrite", "Sites.Read.All"}; // Inkrementelle Anforderung automatisch durch bekanntgabe gaaaanz oben
         _accessToken = _tokenAcquisition.GetAccessTokenForUserAsync(scopes).Result;
         _files = _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync().Result;
-
     }
-
-    
 }

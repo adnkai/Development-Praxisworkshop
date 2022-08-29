@@ -5,16 +5,8 @@ public class StorageAccountHelper
     private BlobServiceClient serviceClient;
     private List<String> images;
     public StorageAccountHelper (IConfiguration config) {
-        // IConfigurationBuilder builder = new ConfigurationBuilder().AddEnvironmentVariables()
-        //      .SetBasePath(Directory.GetCurrentDirectory())
-        //      .AddJsonFile(@"../appsettings.json")
-        //      .AddEnvironmentVariables();
-
-        // IConfigurationRoot config = builder.Build(); 
         serviceClient = new BlobServiceClient(config.GetValue<String>("StorageAccount:StorageConnectionString"));
-        //EnumerateContainersAsync(serviceClient).GetAwaiter().GetResult();
         images = EnumerateBlobsAsync(serviceClient, "images").GetAwaiter().GetResult();
-        //System.Console.WriteLine(GetAccountInfo().Result);
     }
     public List<String> GetImages() {
         return images;

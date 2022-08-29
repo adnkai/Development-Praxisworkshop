@@ -3,15 +3,13 @@ namespace Development_Praxisworkshop.Pages;
 [Authorize]
 public class ProfileModel : PageModel
 {
-    private readonly ILogger<ProfileModel> _logger;
-
-    private readonly GraphServiceClient _graphServiceClient;
-
-    private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
-
-    private HttpContext _httpContext;
-
-    private string[] _graphScopes;
+    #region Private
+        private readonly ILogger<ProfileModel> _logger;
+        private readonly GraphServiceClient _graphServiceClient;
+        private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
+        private HttpContext _httpContext;
+        private string[] _graphScopes;
+    #endregion
 
     public ProfileModel(ILogger<ProfileModel> logger, 
                         IConfiguration configuration,

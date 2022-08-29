@@ -5,13 +5,11 @@ public class TableAccountHelper
   private TableServiceClient _tableServiceClient;
   private TableClient _coreTableClient;
   private TableClient _tableClient;
-  readonly TelemetryClient _telemetryClient;
+  private readonly TelemetryClient _telemetryClient;
   private String _upn;
   private Pageable<CoreTableModel> _tables;
   private IConfiguration _config;
   private Dictionary<String, List<ListElementModel>> _todos = new Dictionary<string, List<ListElementModel>>();
-
-
   private string _coreTableName = "TablesTable";
 
   public TableAccountHelper(IConfiguration config, TelemetryClient telemetry, ClaimsPrincipal user)
@@ -34,7 +32,6 @@ public class TableAccountHelper
     
     return _coreTableClient.Query<CoreTableModel>(filter: $"PartitionKey eq '{_upn}'").ToList<CoreTableModel>();
   }
-
 
   public async Task<Dictionary<String, List<ListElementModel>>> GetToDos()
   {
@@ -129,8 +126,6 @@ public class TableAccountHelper
     return result;
   }
 
-  
-
   public async Task<Azure.Response> PostCreateToDoList(string listName)
   {
     Azure.Response result;
@@ -187,8 +182,4 @@ public class TableAccountHelper
     return null;
   }
 
-
 }
-
-
-

@@ -19,7 +19,6 @@ public class ErrorPageModel : PageModel
     public void OnGet()
     {
         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-        
         throw new ArgumentNullException();
     }
 }

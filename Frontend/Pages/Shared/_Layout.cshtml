@@ -39,13 +39,13 @@
                             
                             // Check Role Membeship?
                             //@if(User.Identity.IsAuthenticated && User.IsInRole("d32ce6ad-d1c1-48e9-ad3d-a30798dcdc16")){ // NotARoleID
-                            <feature name="showTablesWithStorage">
+                            <feature name="ShowTablesWithStorage">
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="/ToDoList">ToDo's</a>                                    
                                 </li>
                             </feature>
                             //}
-                            <feature name="showTablesWithFunction">
+                            <feature name="ShowTablesWithFunction">
                                 @if(User.IsInRole("f7d7fd06-1d71-48b2-b9f5-9e36fd1c7863")){ // gg-sig-akademie - Security Group
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="" asp-page="/ToDoListFunction">ToDo's /w Function</a>
@@ -65,6 +65,11 @@
                         <feature name="ShowEvents">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/EventsUpdates">Events</a>
+                            </li>
+                        </feature>
+                        <feature name="ShowError">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/ErrorPage">@Html.Raw("&#128406;")</a>                                    
                             </li>
                         </feature>
                         <partial name="_LoginPartial" />
