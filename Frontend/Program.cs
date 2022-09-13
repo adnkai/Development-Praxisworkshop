@@ -13,6 +13,7 @@ builder.Host.ConfigureAppConfiguration(builder => {
         // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
         .UseFeatureFlags(options => {
             options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
+            options.Select(KeyFilter.Any, LabelFilter.Null);
         })
         .Select(KeyFilter.Any, "Production") // Any Key, any label DO NOT PUT LABELFILTER.NULL if you labeled your keys. THIS TOOK ME HOURS TO FIGURE OUT!
         .ConfigureRefresh(refresh => { // Configure sentinel refresh
