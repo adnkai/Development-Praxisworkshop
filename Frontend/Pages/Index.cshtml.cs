@@ -17,6 +17,7 @@ public class IndexModel : PageModel
     }
     public void OnGet(int? id){
         
+        _refresher.TryRefreshAsync();
         // /index?id=1
         if (id != null) {
             _refresher.TryRefreshAsync();
