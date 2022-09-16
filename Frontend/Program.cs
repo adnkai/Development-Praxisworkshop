@@ -4,6 +4,10 @@ IConfigurationRefresher _refresher = null;
 
 #region App Configuration
 // App Configuration with managed Identity
+/*
+    Configure App Configuration inside host builder to make
+    it's settings available for builder.Services stack
+*/
 builder.Host.ConfigureAppConfiguration(builder => {
     builder.AddAzureAppConfiguration(options =>
     {
@@ -30,6 +34,10 @@ builder.Host.ConfigureAppConfiguration(builder => {
 });
 builder.Services.AddSingleton<IConfigurationRefresher>(_refresher);
 
+/* 
+    Add Appconfiguration as Service to WebApplicationbuilder
+    to be able to add it as a middleware (app.useAzureAppConfiguration)
+*/
 builder.Services.AddAzureAppConfiguration();
 
 #endregion
