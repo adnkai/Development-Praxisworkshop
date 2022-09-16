@@ -8,9 +8,9 @@ builder.Host.ConfigureAppConfiguration(builder => {
     builder.AddAzureAppConfiguration(options =>
     {
         // Add Environment Variables
-        options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), 
-            new DefaultAzureCredential())
-        // options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
+        // options.Connect(new Uri(Configuration.GetValue<string>("AppConfig:Uri")), 
+        //     new DefaultAzureCredential())
+        options.Connect(Configuration.GetValue<String>("AppConfig:ConnectionString"))
         .UseFeatureFlags(options => {
             options.CacheExpirationInterval = TimeSpan.FromSeconds(Configuration.GetValue<int>("AppConfig:FeatureCacheExpirationInSeconds"));
             options.Select(KeyFilter.Any, LabelFilter.Null);
@@ -29,6 +29,9 @@ builder.Host.ConfigureAppConfiguration(builder => {
     }).AddEnvironmentVariables();
 });
 builder.Services.AddSingleton<IConfigurationRefresher>(_refresher);
+
+builder.Services.AddAzureAppConfiguration();
+
 #endregion
 
 #region Authentication / Authorization
@@ -143,6 +146,7 @@ builder.Services.AddFeatureManagement();
 
 #region Build and run
     var app = builder.Build();
+    app.UseAzureAppConfiguration();
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
