@@ -2,7 +2,7 @@
 
 
 Die Frontend-Anwendung zum Development Praxisworkshop.
-Mit dieser Anwendung demonstrieren wir in kleineren Teilen die Integration unterschiedlicher Azure-Services in eine einfache Webanwendung.
+Mit dieser Anwendung demonstrieren wir in kleineren Teilen die Integration verschiedener Azure-Services in eine Webanwendung.
 
 ---
 
@@ -35,7 +35,10 @@ Mit Azure Monitoring und *Application Insights* bilden wir das Thema Monitoring 
 Mit Azure App Configuration lösen wir die statischen Konfigurationen aus den Services und schaffen eine zentrale Verwaltung.
 Außerdem: Feature Flags!
 
-**08 - Pipelines**
+**08 - Azure Cache For Redis**
+Wir lagern Authentication Cookies an einen Redis Cache aus, damit sich wiederkehrende Nutzer nicht ständig neu anmelden müssen.
+
+**09 - Pipelines**
 
 Der Workshop wird abgerundet, indem wir eine CI/CD Pipeline über GitHub Actions erstellen und unser App-/Function-Deployment über Push-Trigger automatisieren.
 Außerdem zeigen wir den Weg auch über Azure DevOps Pipelines.

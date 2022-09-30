@@ -1,45 +1,22 @@
 # Development-Praxisworkshop
 ADN Praxisworkshop zum Thema Azure Development
 
-In diesem 2-Tages Workshop steigen wir in die Software-Entwicklung mithilfe von Cloud-Lösungen ein.
+In diesem 2-Tages Workshop steigen wir in die Software-Entwicklung von Azure Cloud-Lösungen ein.
 Wir erstellen eine WebApp mit Authentication, binden externe Ressourcen ein und nutzen noSQL Speicher in Azure.
-Außerdem richten wir ein Basis-Monitoring ein, um zu zeigen, was in dieser Richtung alles möglich ist.
+Außerdem richten wir Monitoring ein, lagern Informationen in einen Cache aus und lassen am Ende alles durch eine CI/CD Pipeline bereitstellen.
 
 # Inhalt:
 - Azure App Service
-  - Was ist das?
-  - App Service allgemein
-  - Deployment
-
-- Storage Account 
-  - Was ist das?
-  - App Service Integration
-    - Bildergallerie
-    - Todo-List
-
-- Key Vault
-  - Was ist das?
-  - Sicherer Zugriff auf Geheimnisse
-  - AppSettings
-
-- Functions
-  - Was ist das?
-  - Sicherer Zugriff auf KeyVault-Geheimnisse
-  - Auslagern von WebApp Funktionalitäten
-
+- Storage Accounts 
+- Azure Key Vault
+- Azure Functions
 - Managed Identity/App Registration
-  - Was ist das?
-  - Sicherer, passwordloser Zugriff auf Ressourcen
-
-- Authentication
-  - AzureAD OAuth implementierung
-
-- Monitoring
-  - Application Insights
-
-- Pipelines
-  - Pipeline-Integration unserer Anwendung
-  - Automatisches Deployment
+- Azure Cache for Redis
+- Azure App Configuration
+- Authentication with Azure AD
+- Monitoring with Application Insights
+- Azure DevOps Pipelines
+- GitHub Actions
 
 # Voraussetzungen
 Erfahrungen im Programmieren und Git werden vorausgesetzt.
@@ -50,9 +27,8 @@ ADN Shop: [ADN Praxis Workshop - Azure Development](https://shop.adn.de/Herstell
 # Disclaimer
 Der hier hinterlegte Code, inkl. aller Beispiele und Konfigurationsdateien dient ausschließlich schulischen Zwecken und sollte nicht ohne weitere Prüfung für produktive Szenarien verwendet werden.
 
-
 # Troubleshooting
-Using Azure Cloud Shell to zip deploy the application:
+Azure Cloud Shell für zip deploy der Anwendung:
 
 ### From the /Fronted directory
 ``` powershell
@@ -77,8 +53,8 @@ dotnet restore
 # Vorbereitung für lokales Arbeiten
 Mit folgenden Tools werden wir im Workshop arbeiten:
 
-- Dotnet 3.1/6.0
-  - https://dotnet.microsoft.com/en-us/download/dotnet/3.1 (not necessarily)
+- Net 6
+  - https://dotnet.microsoft.com/en-us/download/dotnet/3.1 (not necessary anymore)
   - https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 - Azure Function Core Tools (v4)
   - https://docs.microsoft.com/de-de/azure/azure-functions/functions-run-local?tabs=v4
@@ -92,3 +68,6 @@ Mit folgenden Tools werden wir im Workshop arbeiten:
 ### Github Actions
 # Flag file as executable
 git update-index --chmod=+x script.sh
+
+# Release-Annotations.sh
+Ein Script für Release Annotations in Application Insights
