@@ -14,3 +14,8 @@ URIs to Microsofts documentation for interesting topics regarding authentication
 
 **AppRegistration.ps1**
 Create and configure an app registration with powershell.
+
+
+**Azure DevOps Demo Generator**
+To create a DevOps Project from the template file go to `https://azuredevopsdemogenerator.azurewebsites.net/`
+and click `choose template`. Then select `private` to upload and deploy the custom template to Azure DevOps.
