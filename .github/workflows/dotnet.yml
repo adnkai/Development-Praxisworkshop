@@ -9,7 +9,7 @@ env:
   AZURE_FUNCTION_NAME: devworkshopfunc
   AZURE_FUNCTION_PACKAGE_PATH: '.'
   DOTNET_VERSION_FUNCTION: '6.0.x'
-
+ 
 jobs:
   frontend:
     #if: ${{ false }}
