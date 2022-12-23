@@ -1,6 +1,6 @@
 name: .NET Core CI
 
-on: [push]
+on: [push] 
 
 env:
   AZURE_WEBAPP_NAME: devworkshop
