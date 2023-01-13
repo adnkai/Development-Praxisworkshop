@@ -12,7 +12,7 @@ env:
  
 jobs:
   frontend:
-    if: ${{ false }}
+    #if: ${{ false }}
     environment: DevWorkshop
     runs-on: windows-latest
 
@@ -74,7 +74,7 @@ jobs:
           ./release-annotation.sh "Release for frontend" "Release for frontend and SHA ${GITHUB_SHA}" "${GITHUB_ACTOR}" "Developmentworkshop" "devworkshop"
   
   function:
-    if: ${{ false }}
+    #if: ${{ false }}
     environment: DevWorkshop
     runs-on: ubuntu-latest
 
