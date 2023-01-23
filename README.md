@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/ADN-Kai/c3ff173d-ae5e-456f-a0b4-cb97ffb622cf/10ac497f-d8b0-4bf6-abee-92213dd4b9b9/_apis/work/boardbadge/6361a129-6eff-4c81-8118-cb0f6ab1c423)](https://dev.azure.com/ADN-Kai/c3ff173d-ae5e-456f-a0b4-cb97ffb622cf/_boards/board/t/10ac497f-d8b0-4bf6-abee-92213dd4b9b9/Microsoft.FeatureCategory)
 # Development-Praxisworkshop
 ADN Praxisworkshop zum Thema Azure Development
 
