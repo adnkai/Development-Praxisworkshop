@@ -6,6 +6,7 @@ Wir erstellen eine WebApp mit Authentication, binden externe Ressourcen ein und 
 Außerdem richten wir Monitoring ein, lagern Informationen in einen Cache aus und lassen am Ende alles durch eine CI/CD Pipeline bereitstellen.
 
 # Inhalt:
+
 - Azure App Service
 - Storage Accounts 
 - Azure Key Vault
