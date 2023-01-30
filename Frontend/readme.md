@@ -42,3 +42,6 @@ Wir lagern Authentication Cookies an einen Redis Cache aus, damit sich wiederkeh
 
 Der Workshop wird abgerundet, indem wir eine CI/CD Pipeline über GitHub Actions erstellen und unser App-/Function-Deployment über Push-Trigger automatisieren.
 Außerdem zeigen wir den Weg auch über Azure DevOps Pipelines.
+
+**Container Instance Managed Identity**
+az container create --resource-group Developmentworkshop --name wrkshp2 --image aksregistrykr.azurecr.io/frontend:v2 --restart-policy Never --registry-username aksregistrykr --registry-password <REGISTRYPASSWORD> --ports 80 443 --cpu 2 --memory 1 --environment-variables AppConfig__Uri=https://appconfig-devworkshop.azconfig.io AppConfig__SentinelRefreshTimeInSeconds=10 AppConfig__FeatureCacheExpirationInSeconds=10 --assign-identity /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/Developmentworkshop/providers/Microsoft.ManagedIdentity/userAssignedIdentities/devWorkshopContainerIdentity --dns-name-label workshopFrontend
